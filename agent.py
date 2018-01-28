@@ -1,8 +1,8 @@
-import os
+import os, math
 import numpy as np
 
 teamName = "knuckles"
-board = np.zeros((15, 15))
+board = np.zeros((225,), dtype=np.int)
 validMoves = []
 for x in range(0,15):
     for y in range(0,15):
@@ -52,8 +52,9 @@ def minimax(team):
     return [bestMoveSoFar[0], columns[bestMoveSoFar[1]]]
 
 def getMaxValue():
-    if isTerminalState():
-        return utility()
+    state = terminalState()
+    if (state != -2):
+        return state
     else:
         result = None
         max = float("-inf")
@@ -64,8 +65,9 @@ def getMaxValue():
     return result
 
 def getMinValue():
-    if isTerminalState():
-        return utility()
+    state = terminalState()
+    if (state != -2):
+        return state
     else:
         result = None
         min = float("inf")
@@ -75,28 +77,38 @@ def getMinValue():
             result = min(child, min)
     return result
 
-def isTerminalState():
+# returns 1 if max won, -1 if min won, 0 if a tie and -2 if not a terminal state yet
+def terminalState():
+
     return
 
-def utility():
-    return 1
-
 def addMove(team, i, j):
+    x = IJToX(i, j)
     if (team == "min"):
         # -1 represents black piece on the board
-        board[i][j] = -1
+        board[x] = -1
     else:
         # 1 represents white piece on the board
-        board[i][j] = 1
+        board[x] = 1
     # Remove the move from the validMoves list
     validMoves.remove([i,j])
     return
 
 def deleteMove(team, i, j):
-    board[i][j] = 0
+    x = IJToX(i, j)
+    board[x] = 0
     # Add the move to the validMoves list
     [i, j]+validMoves
     return
+
+def IJToX(i, j):
+    x = i*15+j
+    return x
+
+def xToIJ(x):
+    i = math.floor(x/15)
+    j = x%15
+    return [i, j]
 
 returns = init()
 
