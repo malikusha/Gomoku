@@ -1,3 +1,4 @@
+import copy
 points = [3,4,5]
 
 """
@@ -5,9 +6,31 @@ If numRow = 1, a copy of the object needs to be created
 TODO: open or closed?
 
 """
+width = 15
+length = 15
+class GomokuCollection:
+    def __init__(self):
+        self.dictionary = {}
+        for i in range(15):
+            for j in range(15):
+                self.dictionary[(i,j)] = []
+                
+    def addNewMove(self, move):
+        aRow = InARow(move)
+        coordinates = aRow.validCont
+        for e in coordinates:
+            self.dictionary[e] += [copy.deepcopy(aRow)]
+        try:
+            rows = self.dictionary[move]
+            for row in rows:
+                row.addMove(move)
+        except:
+            pass
+
+    def getAllMoves(self):
+        return self.dictionary.values()
 
 class InARow:
-    moveToClass = {}
     """
         Assumes move is a size 2 list TODO: change to Tuple
     """
@@ -22,12 +45,11 @@ class InARow:
     def initValidCont(self, move):
         x = move[0]
         y = move[1]
-        #self.validCont = [(x+1,y),(x-1,y),(x,y+1),(x,y-1),(x+1,y+1),(x+1,y-1),(x-1,y+1),(x-1,y+1)]
+        self.validCont = [(x+1,y),(x-1,y),(x,y+1),(x,y-1),(x+1,y+1),(x+1,y-1),(x-1,y+1),(x-1,y+1)]
         
     def addMove(self, move):
         isOne = self.numRow == 1
-        if(isOne):
-            self.updateLength()
+        self.updateLength()
         self.setValidVector(move, isOne)
         self.pos += [move]
     """
@@ -59,22 +81,41 @@ class InARow:
         self.numRow = 1
         self.initValidCont(move)
         self.pos += [move]
-def debugPrint(x):
-    print("Pos: " + str(x.pos))
-    print("Num Rows: " + str(x.numRow))
-    print("X: " + str(x.dx))
-    print("Y: " + str(x.dy))
-    print("Head: " + str(x.head))
-    print("Tail: " + str(x.tail))
-    print("\n")
+        self.dx = 0
+        self.dy = 0
+        self.head = (-1,-1)
+        self.tail = (-1,-1)
+    def debugPrint(self):
+        print("Pos: " + str(self.pos))
+        print("Num Rows: " + str(self.numRow))
+        print("X: " + str(self.dx))
+        print("Y: " + str(self.dy))
+        print("Head: " + str(self.head))
+        print("Tail: " + str(self.tail))
+        print("\n")
 
+
+
+"""
 x = InARow((4,4))
 x.addMove((5,4))
 x.addMove((6,4))
 debugPrint(x)
 x.addMove((3,4))
 debugPrint(x)
-
+"""
+white = GomokuCollection()
+white.addNewMove((4,4))
+white.addNewMove((5,4))
+white.addNewMove((6,4))
+white.addNewMove((4,3))
+allMoves = white.getAllMoves()
+count = 0
+for e in allMoves:
+    for eoe in e:
+        count += 1
+        eoe.debugPrint()
+print("Num: " + str(count))
 def utilityFunction():
     return calcPts(2) + calcPts(3) + calcPts(4)
 
