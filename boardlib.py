@@ -6,16 +6,32 @@ TODO: open or closed?
 TODO: remove stuff from dictionary? space will be pretty big, but i dont think it will
 affect the speed
 """
+
+"""
+This class basically contains all of the InARow objects. Should be initialized for each player
+"""
 class GomokuCollection:
     #Initializes the GomokuCollection object. scoreN represents the weights
     #Given to n-in-a-rows
     def __init__(self, score2 = 2, score3 = 3, score4 = 4):
+        #the dictionary basically links a coordinate with all InARow objects that can grow 
+        #(IE by placing a piece there the InARoW object evolves from an N in a row to an
+        #N+1 in a row
         self.dictionary = {}
+        #Created to save time.
+        #Stores all InARow object of length greater than 1
         self.scorable = set()
+        
+        #The weights of the 2,3,4 in a rows. should be experimented and changed
         self.score2 = score2
         self.score3 = score3
         self.score4 = score4
+     #when a moved is played, this move should be called
     def addNewMove(self, move):
+        """
+        Adds a move and creates up to 4 InARow objects of length 1. 
+        Then, it tries to join itself with existing InARow objects
+        """
         aRow = InARow(move)
         coordinates = aRow.validCont
         if(move not in self.dictionary): self.dictionary[move] = set()
@@ -43,10 +59,12 @@ class GomokuCollection:
                 self.tryAdd(e[1], copyRow)
                 #self.dictionary[e[1]].add(copyRow)
         del self.dictionary[move] #if we remove this will it make the AI worse?
+        
+    #tries to add a move to the dictionary
     def tryAdd(self, key, move):
         if(key not in self.dictionary): self.dictionary[key] = set()
         self.dictionary[key].add(move)
-        
+     
     def getAllValidMoves(self):
         return self.dictionary.keys()
     def getAllMoves(self):
