@@ -3,8 +3,8 @@ import numpy as np
 import boardlib as boardlib
 
 """
-TODO: Set the timer to return bestMoveSoFar when 9 seconds pass
-TODO: Alpha-beta pruning with iterative deepening
+TODO: Set the timer to return bestMoveSoFar when 9 seconds pass - iterarive deepening (aka cutoff)
+TODO: Sort the validMoves by their desirability
 """
 
 
@@ -23,7 +23,6 @@ columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 
 def init():
     while("end_game" not in os.listdir(".")):
-        print("hi")
         if (teamName+".go" in os.listdir(".")):
             move_file = open("move_file", 'r')
             move = move_file.read()
@@ -56,37 +55,49 @@ def minimax(team):
     for move in validMoves:
         # add each move to the board and get the value
         addMove(team, move[0], move[1])
-        currentMaxVal = getMaxValue(3)
+        currentMaxVal = getMaxValue(3, float("-inf"), float("inf"))
         if (bestValueSoFar < currentMaxVal or bestValueSoFar == None):
             bestValueSoFar = currentMaxVal
             bestMoveSoFar = move
+            print("Best")
         else:
+            print("Delete")
             deleteMove(team, move[0], move[1])
     return (bestMoveSoFar[0], columns[bestMoveSoFar[1]])
 
-def getMaxValue(depth):
-    utility = white.getScore()-black.getScore()
-    if (depth == 0 or not validMoves or utility >= 10000000000000000000000000000):
-        return utility
+def getMaxValue(depth, alpha, beta):
+    print("MAX")
+    eval = white.getScore()-black.getScore()
+    if (depth == 0 or not validMoves):
+        return eval
     else:
-        max_val = float("-inf")
+        value = float("-inf")
         for move in validMoves:
             addMove("max", move[0], move[1])
-            child = getMinValue(depth-1)
-            result = max(child, max_val)
-    return result
+            child = getMinValue(depth - 1, alpha, beta)
+            value = max(value, child)
+            if (value >= beta):
+                print("pruned")
+                return value
+            alpha = max(alpha, value)
+    return value
 
-def getMinValue(depth):
-    utility = white.getScore() - black.getScore()
-    if (depth == 0 or not validMoves or utility >= 10000000000000000000000000000):
-        return utility
+def getMinValue(depth, alpha, beta):
+    print("MIN")
+    eval = white.getScore() - black.getScore()
+    if (depth == 0 or not validMoves):
+        return eval
     else:
-        min_val = float("inf")
+        value = float("inf")
         for move in validMoves:
             addMove("min", move[0], move[1])
-            child = getMaxValue(depth-1)
-            result = min(child, min_val)
-    return result
+            child = getMaxValue(depth-1, alpha, beta)
+            value = min(value, child)
+            if (value <= alpha):
+                print("pruned")
+                return value
+            beta = min(beta, value)
+    return value
 
 def addMove(team, i, j):
     global white
