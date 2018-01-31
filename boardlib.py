@@ -2,6 +2,8 @@ import copy
 
 """
 If numRow = 1, a copy of the object needs to be created
+TODO: removeMove((i,j)) - removes the move from the board
+TODO: think a bit more about the terminal condition
 TODO: open or closed?
 TODO: remove stuff from dictionary? space will be pretty big, but i dont think it will
 affect the speed

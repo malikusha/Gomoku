@@ -2,6 +2,12 @@ import os, math
 import numpy as np
 import boardlib as boardlib
 
+"""
+TODO: Set the timer to return bestMoveSoFar when 9 seconds pass
+TODO: Alpha-beta pruning with iterative deepening
+"""
+
+
 teamName = "Large_Horse"
 bestMoveSoFar = None
 bestValueSoFar = 0
