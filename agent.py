@@ -3,9 +3,12 @@ import numpy as np
 import boardlib as boardlib
 
 teamName = "Large_Horse"
+bestMoveSoFar = None
+bestValueSoFar = 0
 white = boardlib.GomokuCollection()
 black = boardlib.GomokuCollection()
 validMoves = []
+board = np.zeros((15,15), dtype=int)
 for x in range(0,15):
     for y in range(0,15):
         validMoves.append((x, y))
@@ -41,104 +44,63 @@ def makeMove(team, i, j):
     return teamName + " " + str(move[1]) + " " + str(move[0])
 
 def minimax(team):
-    bestMoveSoFar = validMoves[0]
-    bestValueSoFar = getMaxValue(3)
+    global bestValueSoFar
+    global bestMoveSoFar
     # choose a move
     for move in validMoves:
         # add each move to the board and get the value
         addMove(team, move[0], move[1])
         currentMaxVal = getMaxValue(3)
-        if (bestValueSoFar < currentMaxVal):
+        if (bestValueSoFar < currentMaxVal or bestValueSoFar == None):
             bestValueSoFar = currentMaxVal
             bestMoveSoFar = move
         else:
             deleteMove(team, move[0], move[1])
-    return [bestMoveSoFar[0], columns[bestMoveSoFar[1]]]
+    return (bestMoveSoFar[0], columns[bestMoveSoFar[1]])
 
 def getMaxValue(depth):
-    if (depth == 0):
-        return white.getScore()-black.getScore()
+    utility = white.getScore()-black.getScore()
+    if (depth == 0 or not validMoves or utility >= 10000000000000000000000000000):
+        return utility
     else:
-        result = None
-        max = float("-inf")
+        max_val = float("-inf")
         for move in validMoves:
             addMove("max", move[0], move[1])
             child = getMinValue(depth-1)
-            result = max(child, max)
+            result = max(child, max_val)
     return result
 
 def getMinValue(depth):
-    if (depth == 0):
-        return white.getScore()-black.getScore()
+    utility = white.getScore() - black.getScore()
+    if (depth == 0 or not validMoves or utility >= 10000000000000000000000000000):
+        return utility
     else:
-        result = None
-        min = float("inf")
+        min_val = float("inf")
         for move in validMoves:
             addMove("min", move[0], move[1])
             child = getMaxValue(depth-1)
-            result = min(child, min)
+            result = min(child, min_val)
     return result
 
-# check first diagonal, color is the the color of a player black or white, -1 for black and +1 for white
-# def winFDiagonal(color):
-#     n = 0
-#     for j in range(0, 11):
-#         lower = j
-#         upper = j
-#         sum = 0
-#         while (upper < 224-n) and (lower < 224-n):
-#             if (sum != 5):
-#                 if (board[lower] != color):
-#                     sum = 0
-#                     lower = upper + 16
-#                     upper = lower
-#                 elif (board[upper] == color):
-#                     upper += 16
-#                     sum = sum + 1
-#                 elif (board[upper] != color):
-#                     lower = upper
-#             else:
-#                 return True
-#         n += 15
-#     i = 15
-#     while (i < 167):
-#         lower = i
-#         upper = i
-#         sum = 0
-#         while (upper < 223-n) and (lower < 223-n):
-#             if (sum != 5):
-#                 if(board[lower] != color):
-#                     sum = 0
-#                     lower = upper + 16
-#                     upper = lower
-#                 elif(board[upper] == color):
-#                     upper += 16
-#                     sum = sum + 1
-#                 elif(board[upper] != color):
-#                     lower = upper
-#             else:
-#                 return True
-#         n += 1
-#         i += 16
-#     return False
-
-# and then bottom part of the board, excluding the last three rows/columns
-
-
 def addMove(team, i, j):
+    global white
+    global black
     if (team == "min"):
-        black.addNewMove(i,j)
+        black.addNewMove((i, j))
+        board[i, j] = -1
     else:
-        white.addNewMove(i, j)
+        white.addNewMove((i, j))
+        board[i, j] = 1
     # Remove the move from the validMoves list
     validMoves.remove((i,j))
     return
 
 def deleteMove(team, i, j):
     if (team == "min"):
-        black.removeMove(i,j)
+        black.removeMove((i, j))
     else:
-        white.removeMove(i,j)
+        white.removeMove((i, j))
+    board[i, j] = 0
     # Add the move to the validMoves list
     (i, j)+validMoves
     return
@@ -146,12 +108,21 @@ def deleteMove(team, i, j):
 returns = init()
 
 
+# Tests for adding the move to the board
+print(board)
+print((2,3) in validMoves)
+addMove("min", 2, 3)
+print(board)
+print((2,3) in validMoves)
+# getMaxValue(4)
 
-white = boardlib.GomokuCollection()
-black = boardlib.GomokuCollection()
-white.addNewMove((3,3))
-black.addNewMove((2,3))
-white.addNewMove((4,3))
-black.addNewMove((1,3))
-utility = white.getScore() - black.getScore()
-print(utility)
+
+
+# white = boardlib.GomokuCollection()
+# black = boardlib.GomokuCollection()
+# white.addNewMove((3,3))
+# black.addNewMove((2,3))
+# white.addNewMove((4,3))
+# black.addNewMove((1,3))
+# utility = white.getScore() - black.getScore()
+# print(utility)

@@ -84,7 +84,8 @@ class GomokuCollection:
             elif (e.numRow == 4):
                 score += self.score4
             else:
-                print("Hfjsfdafdklj error detected")
+                score += 10000000000000000000000000000
+                return score
         return score
 
 
