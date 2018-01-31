@@ -1,31 +1,35 @@
 import os, math
 import numpy as np
+import boardlib as boardlib
 
-teamName = "knuckles"
-board = np.zeros((225,), dtype=np.int)
+teamName = "Large_Horse"
+white = boardlib.GomokuCollection()
+black = boardlib.GomokuCollection()
 validMoves = []
 for x in range(0,15):
     for y in range(0,15):
-        validMoves.append([x, y])
+        validMoves.append((x, y))
 columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-print(board)
 
 def init():
-    while(teamName+".go" in os.listdir(".") and "end_game" not in os.listdir(".")):
-        move_file = open("move_file", 'r')
-        move = move_file.read()                            # move is the opponent's move
-        i=-1; j=-1
-        if not move:
-            team = "max"
-        else:
-            team = "min"
-            j = columns.index(move.split()[1])
-            i = int(move.split()[2])
-        move_file.close()                                  # if the move_file is empty, you are playing with white (move = 0)
-        f = open("move_file", 'w')
-        f.write(makeMove(team, i, j))
-        f.close()
+    while("end_game" not in os.listdir(".")):
+        print("hi")
+        if (teamName+".go" in os.listdir(".")):
+            move_file = open("move_file", 'r')
+            move = move_file.read()
+            move_file.close()
+            if (move):
+                if (move.split()[0] != "Large_Horse"):
+                    j = columns.index(move.split()[1])
+                    i = int(move.split()[2])
+                    f = open("move_file", 'w')
+                    f.write(makeMove("min", i, j))
+                    f.close()
+            elif (not move):
+                f = open("move_file", 'w')
+                f.write(makeMove("max", -1, -1))
+                f.close()
     return
 
 def makeMove(team, i, j):
@@ -34,16 +38,16 @@ def makeMove(team, i, j):
         addMove(team, i, j)
         team = "max"
     move = minimax(team)
-    return teamName + " " + move[1] + " " + move[0]
+    return teamName + " " + str(move[1]) + " " + str(move[0])
 
 def minimax(team):
     bestMoveSoFar = validMoves[0]
-    bestValueSoFar = getMaxValue()
+    bestValueSoFar = getMaxValue(3)
     # choose a move
     for move in validMoves:
         # add each move to the board and get the value
         addMove(team, move[0], move[1])
-        currentMaxVal = getMaxValue(move)
+        currentMaxVal = getMaxValue(3)
         if (bestValueSoFar < currentMaxVal):
             bestValueSoFar = currentMaxVal
             bestMoveSoFar = move
@@ -51,69 +55,103 @@ def minimax(team):
             deleteMove(team, move[0], move[1])
     return [bestMoveSoFar[0], columns[bestMoveSoFar[1]]]
 
-def getMaxValue():
-    state = terminalState()
-    if (state != -2):
-        return state
+def getMaxValue(depth):
+    if (depth == 0):
+        return white.getScore()-black.getScore()
     else:
         result = None
         max = float("-inf")
         for move in validMoves:
             addMove("max", move[0], move[1])
-            child = getMinValue()
+            child = getMinValue(depth-1)
             result = max(child, max)
     return result
 
-def getMinValue():
-    state = terminalState()
-    if (state != -2):
-        return state
+def getMinValue(depth):
+    if (depth == 0):
+        return white.getScore()-black.getScore()
     else:
         result = None
         min = float("inf")
         for move in validMoves:
             addMove("min", move[0], move[1])
-            child = getMaxValue()
+            child = getMaxValue(depth-1)
             result = min(child, min)
     return result
 
-# returns 1 if max won, -1 if min won, 0 if a tie and -2 if not a terminal state yet
-def terminalState():
+# check first diagonal, color is the the color of a player black or white, -1 for black and +1 for white
+# def winFDiagonal(color):
+#     n = 0
+#     for j in range(0, 11):
+#         lower = j
+#         upper = j
+#         sum = 0
+#         while (upper < 224-n) and (lower < 224-n):
+#             if (sum != 5):
+#                 if (board[lower] != color):
+#                     sum = 0
+#                     lower = upper + 16
+#                     upper = lower
+#                 elif (board[upper] == color):
+#                     upper += 16
+#                     sum = sum + 1
+#                 elif (board[upper] != color):
+#                     lower = upper
+#             else:
+#                 return True
+#         n += 15
+#     i = 15
+#     while (i < 167):
+#         lower = i
+#         upper = i
+#         sum = 0
+#         while (upper < 223-n) and (lower < 223-n):
+#             if (sum != 5):
+#                 if(board[lower] != color):
+#                     sum = 0
+#                     lower = upper + 16
+#                     upper = lower
+#                 elif(board[upper] == color):
+#                     upper += 16
+#                     sum = sum + 1
+#                 elif(board[upper] != color):
+#                     lower = upper
+#             else:
+#                 return True
+#         n += 1
+#         i += 16
+#     return False
 
-    return
+# and then bottom part of the board, excluding the last three rows/columns
+
 
 def addMove(team, i, j):
-    x = IJToX(i, j)
     if (team == "min"):
-        # -1 represents black piece on the board
-        board[x] = -1
+        black.addNewMove(i,j)
     else:
-        # 1 represents white piece on the board
-        board[x] = 1
+        white.addNewMove(i, j)
     # Remove the move from the validMoves list
-    validMoves.remove([i,j])
+    validMoves.remove((i,j))
     return
 
 def deleteMove(team, i, j):
-    x = IJToX(i, j)
-    board[x] = 0
+    if (team == "min"):
+        black.removeMove(i,j)
+    else:
+        white.removeMove(i,j)
     # Add the move to the validMoves list
-    [i, j]+validMoves
+    (i, j)+validMoves
     return
-
-def IJToX(i, j):
-    x = i*15+j
-    return x
-
-def xToIJ(x):
-    i = math.floor(x/15)
-    j = x%15
-    return [i, j]
 
 returns = init()
 
 
 
-
-
-
+white = boardlib.GomokuCollection()
+black = boardlib.GomokuCollection()
+white.addNewMove((3,3))
+black.addNewMove((2,3))
+white.addNewMove((4,3))
+black.addNewMove((1,3))
+utility = white.getScore() - black.getScore()
+print(utility)
