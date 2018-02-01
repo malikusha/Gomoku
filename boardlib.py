@@ -1,5 +1,6 @@
 import copy
 
+
 """
 If numRow = 1, a copy of the object needs to be created
 TODO: removeMove((i,j)) - removes the move from the board
@@ -21,10 +22,14 @@ class GomokuCollection:
         # the dictionary basically links a coordinate with all InARow objects that can grow
         # (IE by placing a piece there the InARoW object evolves from an N in a row to an
         # N+1 in a row
+        #Dictionary: move -> list of moves
         self.dictionary = {}
         # Created to save time.
         # Stores all InARow object of length greater than 1
         self.scorable = set()
+
+        #Stores all the moves in order
+        self.orderedMoves = []
 
         # The weights of the 2,3,4 in a rows. should be experimented and changed
         self.score2 = score2
@@ -42,7 +47,7 @@ class GomokuCollection:
         if (move not in self.dictionary): self.dictionary[move] = set()
         rows = self.dictionary[move]
         taken = []
-
+        self.orderedMoves += [move]
         # Tries to join the new move with previous InARow objects
         for row in rows:
             if (row.numRow == 1): self.scorable.add(row)
@@ -63,12 +68,33 @@ class GomokuCollection:
                 # self.dictionary[e[0]].add(copyRow)
                 self.tryAdd(e[1], copyRow)
                 # self.dictionary[e[1]].add(copyRow)
-        del self.dictionary[move]  # if we remove this will it make the AI worse?
+        #del self.dictionary[move]  # if we remove this will it make the AI worse?
 
     # tries to add a move to the dictionary
     def tryAdd(self, key, move):
         if (key not in self.dictionary): self.dictionary[key] = set()
         self.dictionary[key].add(move)
+
+    def undoMove(self):
+        curMove = self.orderedMoves.pop()
+        x = curMove[0]
+        y = curMove[1]
+        boundaryList = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1), (x + 1, y + 1), (x - 1, y - 1),
+                          (x - 1, y + 1), (x + 1, y - 1)]
+        #remove all InARow  objects of length 1
+        for e1 in boundaryList:
+            self.dictionary[e1] = set(s for s in self.dictionary[e1] if curMove not in s.pos)
+        #For objects of length greater than 1
+        #-> reduce count by 1
+        #-> change head tail
+        #-> remove from position
+        for move in self.dictionary[curMove]:
+            move.removeMove(curMove)
+                    
+                
+
+                
+                
 
     def getAllValidMoves(self):
         return self.dictionary.keys()
@@ -149,6 +175,16 @@ class InARow:
         self.head = (-1, -1)
         self.tail = (-1, -1)
 
+    def removeMove(self, move):
+        self.numRow = self.numRow - 1
+        headVal = self.head[0] - move[0] + self.head[1] - move[1]
+        tailVal = self.tail[0] - move[0] + self.tail[1] - move[1]
+        if(headVal>tailVal):
+            self.head = move
+        else:
+            self.tail = move
+        #TODO: change head/tail
+    
     def debugPrint(self):
         print("Pos: " + str(self.pos) + " Num Rows: " + str(self.numRow)
               + " Head: " + str(self.head) + " Tail: " + str(self.tail))
@@ -168,6 +204,31 @@ debugPrint(x)
 """
 Call this function to test
 """
+
+def testDelete():
+    white = GomokuCollection()
+    white.addNewMove((4, 4))
+    white.addNewMove((5, 4))
+    white.addNewMove((6, 4))
+    white.addNewMove((4, 3))
+    white.undoMove()
+    printOutStuff(white)
+
+def printOutStuff(aCollection):
+    allMoves = aCollection.getAllValidMoves()
+    count = 0
+    for e1 in allMoves:
+        e = aCollection.dictionary[e1]
+        if (len(e) >= 1):
+            print("Coordinate: " + str(e1))
+            for eoe in e:
+                count += 1
+                if (eoe.numRow > 1):
+                    # x= 3
+                    print(eoe)
+                    eoe.debugPrint()
+            print("")
+    print("Num: " + str(count))
 
 
 def test():
