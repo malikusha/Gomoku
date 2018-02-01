@@ -37,6 +37,36 @@ class GomokuCollection:
         self.score4 = score4
         # when a moved is played, this move should be called
 
+    #sdf
+    def debugPrint(self, include1 = False, fulldebug = False):
+        print("Init Debugging")
+        if(include1 and fulldebug):
+            for e in self.dictionary:
+                curList = self.dictionary[e]
+                print("Current Key: " + str(e))
+                for e1 in curList:
+                    e1.debugPrint()
+        elif(include1):
+            bigList = set()
+            for e in self.dictionary:
+                print("Current Key: " + str(e))
+                curList = self.dictionary[e]
+                for e1 in curList:
+                    if(e1 not in bigList):
+                        e1.debugPrint()
+                        bigList.add(e1)
+        elif(fulldebug):
+            if(include1 and fulldebug):
+                for e in self.dictionary:
+                    curList = self.dictionary[e]
+                    print("Current Key: " + str(e))
+                    for e1 in curList:
+                        if(e1.numRow>1): e1.debugPrint()
+        else:
+            for e in self.scorable:
+                e.debugPrint()
+            
+
     def addNewMove(self, move):
         """
         Adds a move and creates up to 4 InARow objects of length 1. 
@@ -84,12 +114,16 @@ class GomokuCollection:
         #remove all InARow  objects of length 1
         for e1 in boundaryList:
             self.dictionary[e1] = set(s for s in self.dictionary[e1] if curMove not in s.pos)
+            if(len(self.dictionary[e1])==0): del self.dictionary[e1]
+                
         #For objects of length greater than 1
         #-> reduce count by 1
         #-> change head tail
         #-> remove from position
         for move in self.dictionary[curMove]:
             move.removeMove(curMove)
+            if(move.numRow <2):
+                self.scorable.remove(move)
                     
                 
 
@@ -158,7 +192,9 @@ class InARow:
             elif (move == self.tail):
                 self.tail = (self.tail[0] - self.dx, self.tail[1] - self.dy)
             else:
-                print("BHON SCReWED UP KEKEKEKEKEKEKEKEKEKEKEKefjkjl")
+                print("Error in the setValidvector")
+                print("Head: " + str(self.head))
+                print("Tail: " + str(self.tail))
                 # self.validCont = [(newMove[0]+self.dx, newMove[0]+self.dy), (self.pos[0][0]-self.dx, self.pos[0][1]-self.dx)]
 
     def updateLength(self):
@@ -183,6 +219,7 @@ class InARow:
             self.head = move
         else:
             self.tail = move
+        self.pos.remove(move)
         #TODO: change head/tail
     
     def debugPrint(self):
@@ -252,6 +289,14 @@ def test():
             print("")
     print("Num: " + str(count))
     return white
+
+
+def testDebugCapabilities():
+    white = GomokuCollection()
+    white.addNewMove((4,3))
+    white.addNewMove((2,3))
+    white.addNewMove((3,3))
+    white.debugPrint(include1 = True)
 
 
 def utilityFunction():
