@@ -193,6 +193,7 @@ class InARow:
                 self.tail = (self.tail[0] - self.dx, self.tail[1] - self.dy)
             else:
                 print("Error in the setValidvector")
+                print("Current Value: " + str(move))
                 print("Head: " + str(self.head))
                 print("Tail: " + str(self.tail))
                 # self.validCont = [(newMove[0]+self.dx, newMove[0]+self.dy), (self.pos[0][0]-self.dx, self.pos[0][1]-self.dx)]
