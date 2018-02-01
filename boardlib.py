@@ -86,7 +86,7 @@ class GomokuCollection:
             elif (e.numRow == 4):
                 score += self.score4
             else:
-                score += 10000000000000000000000000000
+                score += 1000000
                 return score
         return score
 

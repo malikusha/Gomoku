@@ -1,4 +1,4 @@
-import os, math
+import os, math, time
 import numpy as np
 import boardlib as boardlib
 
@@ -9,8 +9,9 @@ TODO: Sort the validMoves by their desirability
 
 
 teamName = "Large_Horse"
-bestMoveSoFar = None
-bestValueSoFar = 0
+timeLimit = 10
+bestMove = None
+bestValue = float("-inf")
 white = boardlib.GomokuCollection()
 black = boardlib.GomokuCollection()
 validMoves = []
@@ -20,6 +21,8 @@ for x in range(0,15):
         validMoves.append((x, y))
 columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+winScoreCutOff = 1000000
+cutOff = False
 
 def init():
     while("end_game" not in os.listdir(".")):
@@ -30,7 +33,7 @@ def init():
             if (move):
                 if (move.split()[0] != "Large_Horse"):
                     j = columns.index(move.split()[1])
-                    i = int(move.split()[2])
+                    i = int(move.split()[2])-1
                     f = open("move_file", 'w')
                     f.write(makeMove("min", i, j))
                     f.close()
@@ -46,53 +49,82 @@ def makeMove(team, i, j):
         addMove(team, i, j)
         team = "max"
     move = minimax(team)
-    return teamName + " " + str(move[1]) + " " + str(move[0])
+    addMove(team, move[1], move[0])
+    return teamName + " " + str(move[1]).upper() + " " + str(move[0]+1).upper()
 
 def minimax(team):
-    global bestValueSoFar
-    global bestMoveSoFar
+    global bestValue
+    global bestMove
     # choose a move
     for move in validMoves:
         # add each move to the board and get the value
         addMove(team, move[0], move[1])
-        currentMaxVal = getMaxValue(3, float("-inf"), float("inf"))
-        if (bestValueSoFar < currentMaxVal or bestValueSoFar == None):
-            bestValueSoFar = currentMaxVal
-            bestMoveSoFar = move
-            print("Best")
-        else:
-            print("Delete")
-            deleteMove(team, move[0], move[1])
-    return (bestMoveSoFar[0], columns[bestMoveSoFar[1]])
+        timeLimitForMove = (timeLimit - 1)/len(validMoves)
+        currentMaxVal = ID(timeLimitForMove)
+        if (currentMaxVal >= winScoreCutOff):
+            return (move[0], columns[move[1]])
+        if (bestValue < currentMaxVal):
+            bestValue = currentMaxVal
+            bestMove = move
+        deleteMove(team, move[0], move[1])
+    return (bestMove[0], columns[bestMove[1]])
 
-def getMaxValue(depth, alpha, beta):
+def ID(timeLimitForMove):
+    global cutOff
+    depthLimit = 1
+    startTime = time.time()
+    stopTime = startTime + timeLimitForMove
+    maxVal = 0
+    while(1):
+        if (time.time() >= stopTime):
+            break
+        currentMaxVal = getMaxValue(stopTime, float("-inf"), float("inf"))
+        if (not cutOff):
+            maxVal = currentMaxVal
+        if (currentMaxVal >= winScoreCutOff):
+            return currentMaxVal
+        depthLimit += 1
+    cutOff = False
+    return maxVal
+
+def getMaxValue(stopTime, alpha, beta):
     print("MAX")
+    global cutOff
     eval = white.getScore()-black.getScore()
-    if (depth == 0 or not validMoves):
+
+    if (time.time() >= stopTime):
+        cutOff = True
+    if (not validMoves or eval >= winScoreCutOff or cutOff):
         return eval
     else:
         value = float("-inf")
         for move in validMoves:
             addMove("max", move[0], move[1])
-            child = getMinValue(depth - 1, alpha, beta)
+            child = getMinValue(stopTime, alpha, beta)
             value = max(value, child)
+            deleteMove("max", move[0], move[1])
             if (value >= beta):
                 print("pruned")
                 return value
             alpha = max(alpha, value)
     return value
 
-def getMinValue(depth, alpha, beta):
+def getMinValue(stopTime, alpha, beta):
     print("MIN")
+    global cutOff
     eval = white.getScore() - black.getScore()
-    if (depth == 0 or not validMoves):
+
+    if (time.time() >= stopTime):
+        cutOff = True
+    if (not validMoves or eval <= -winScoreCutOff or cutOff):
         return eval
     else:
         value = float("inf")
         for move in validMoves:
             addMove("min", move[0], move[1])
-            child = getMaxValue(depth-1, alpha, beta)
+            child = getMaxValue(stopTime, alpha, beta)
             value = min(value, child)
+            deleteMove("max", move[0], move[1])
             if (value <= alpha):
                 print("pruned")
                 return value
@@ -126,11 +158,11 @@ returns = init()
 
 
 # Tests for adding the move to the board
-print(board)
-print((2,3) in validMoves)
-addMove("min", 2, 3)
-print(board)
-print((2,3) in validMoves)
+# print(board)
+# print((2,3) in validMoves)
+# addMove("min", 2, 3)
+# print(board)
+# print((2,3) in validMoves)
 # getMaxValue(4)
 
 
