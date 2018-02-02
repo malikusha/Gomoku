@@ -18,7 +18,7 @@ DEBUG = False
 class GomokuCollection:
     # Initializes the GomokuCollection object. scoreN represents the weights
     # Given to n-in-a-rows
-    def __init__(self, score2=2, score3=3, score4=4):
+    def __init__(self, score2=2, score3=5, score4=10):
         # the dictionary basically links a coordinate with all InARow objects that can grow
         # (IE by placing a piece there the InARoW object evolves from an N in a row to an
         # N+1 in a row
@@ -116,7 +116,7 @@ class GomokuCollection:
     # tries to add a move to the dictionary
     def tryAdd(self, key, move):
         if(not(key[0] > 14 or key[0] < 0 or key[1] > 14 or key[1] < 0)):
-            print("WOW its the key!: " + str(key))
+            #print("WOW its the key!: " + str(key))
             if (key not in self.dictionary): self.dictionary[key] = set()
             self.dictionary[key].add(move)
 

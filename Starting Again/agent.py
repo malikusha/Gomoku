@@ -15,7 +15,7 @@ COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 TIME_LIMIT = 10  # Seconds
 BOARD_SIZE = 15
 DEBUG = False # if DEBUG: print("")
-DEBUG2 = True
+DEBUG2 = False
 WIN_SCORE_CUTOFF = 1000000 #If heuristics weight is higher than this score, than it is a win
 
 # Objects
@@ -36,6 +36,7 @@ board = np.zeros((BOARD_SIZE, BOARD_SIZE), dtype=int)
 
 def init():
     global firstPlayer
+    global bestValue
     # The Player stops playing once the game has ended
     while "end_game" not in os.listdir("."):
 
@@ -46,6 +47,7 @@ def init():
             move_file = open("move_file", 'r')
             move = move_file.read()
             move_file.close()
+            time.sleep(1)
             # On first turn, need to denote whether player is playing first in start of game or not
             if not move:
                 # There are no previous moves, therefore player is playing first in the game
@@ -60,6 +62,7 @@ def init():
                 addMoveToBoard(7, 7, True)
 
             elif move.split()[0] != TEAM_NAME:
+                bestValue = float("-inf")
 
                 # Player is not starting player in beginning of game
                 # Because there will always be a move in other turns,
@@ -73,11 +76,8 @@ def init():
                 if DEBUG2: print("ROW: %i, COLUMN: %i" % (row,col))
 
                 addMoveToBoard(row, col, False)  # add enemy move to board
-
                 # Obtain the enemy player move, update move to internal board, and make a move and write to file
-                f = open("move_file", 'w')
-                f.write(makeMove())
-                f.close()
+                makeMove()
 
 
     return
@@ -117,8 +117,13 @@ def removeMoveFromBoard(i, j, ourMove):
 def makeMove():
     global bestMove
     minimax()
+    print("Best Move")
+    print(bestMove)
     addMoveToBoard(bestMove[0], bestMove[1], True)
-    return TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1)
+    f = open("move_file", 'w')
+    f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
+    f.close()
+
 
 """
 opponent's move: d5 
