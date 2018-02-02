@@ -14,7 +14,8 @@ COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 TIME_LIMIT = 10  # Seconds
 BOARD_SIZE = 15
-DEBUG = True # if DEBUG: print("")
+DEBUG = False # if DEBUG: print("")
+DEBUG2 = True
 WIN_SCORE_CUTOFF = 1000000 #If heuristics weight is higher than this score, than it is a win
 
 # Objects
@@ -35,13 +36,12 @@ board = np.zeros((BOARD_SIZE, BOARD_SIZE), dtype=int)
 
 def init():
     global firstPlayer
-    if not DEBUG: print(board)
     # The Player stops playing once the game has ended
     while "end_game" not in os.listdir("."):
 
         # The player moves only if "Large_Horse.go" file appears in directory
         if TEAM_NAME+".go" in os.listdir("."):
-
+            time.sleep(0.5)
             # Check move_file to read the current moves
             move_file = open("move_file", 'r')
             move = move_file.read()
@@ -69,8 +69,8 @@ def init():
 
                 # Obtain row and column of enemy player move
                 row = int(move.split()[2]) - 1
-                col = COLUMNS.index(move.split()[1])
-                if DEBUG: print("ROW: %i, COLUMN: %i" % (row,col))
+                col = COLUMNS.index(move.split()[1].upper())
+                if DEBUG2: print("ROW: %i, COLUMN: %i" % (row,col))
 
                 addMoveToBoard(row, col, False)  # add enemy move to board
 
@@ -86,7 +86,7 @@ def addMoveToBoard(i, j, ourMove):
     global white
     global black
     global board
-
+    print(i,j)
     if not ourMove:
         black.addNewMove((i, j))
         board[i, j] = -1
@@ -95,7 +95,6 @@ def addMoveToBoard(i, j, ourMove):
         board[i, j] = 1
     # Remove the move from the validMoves list
     # validMoves.remove((i,j))
-    if not DEBUG: print(board)
     return
 
 def removeMoveFromBoard(i, j, ourMove):
@@ -114,7 +113,6 @@ def makeMove():
     global bestMove
     minimax()
     addMoveToBoard(bestMove[0], bestMove[1], True)
-    print(board)
     return TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1)
 
 """
