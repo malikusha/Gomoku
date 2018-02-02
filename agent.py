@@ -49,7 +49,7 @@ def makeMove(team, i, j):
         addMove(team, i, j)
         team = "max"
     move = minimax(team)
-    # addMove(team, move[0], columns.index(move[1]))
+    addMove(team, move[0], columns.index(move[1]))
     return teamName + " " + str(move[1]).upper() + " " + str(move[0]+1)
 
 def minimax(team):
