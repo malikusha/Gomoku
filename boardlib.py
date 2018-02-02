@@ -13,7 +13,7 @@ affect the speed
 """
 This class basically contains all of the InARow objects. Should be initialized for each player
 """
-
+DEBUG = True
 
 class GomokuCollection:
     # Initializes the GomokuCollection object. scoreN represents the weights
@@ -68,6 +68,8 @@ class GomokuCollection:
             
 
     def addNewMove(self, move):
+
+        if(DEBUG): print("Adding Move: " + str(move))
         """
         Adds a move and creates up to 4 InARow objects of length 1. 
         Then, it tries to join itself with existing InARow objects
@@ -107,14 +109,17 @@ class GomokuCollection:
 
     def undoMove(self):
         curMove = self.orderedMoves.pop()
+        if (DEBUG):
+            print("Removing move: " + str(curMove))
         x = curMove[0]
         y = curMove[1]
         boundaryList = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1), (x + 1, y + 1), (x - 1, y - 1),
                           (x - 1, y + 1), (x + 1, y - 1)]
         #remove all InARow  objects of length 1
+        print(self.dictionary)
         for e1 in boundaryList:
             self.dictionary[e1] = set(s for s in self.dictionary[e1] if curMove not in s.pos)
-            if(len(self.dictionary[e1])==0): del self.dictionary[e1]
+            # if(len(self.dictionary[e1])==0): del self.dictionary[e1]
                 
         #For objects of length greater than 1
         #-> reduce count by 1
