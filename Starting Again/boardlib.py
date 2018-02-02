@@ -30,7 +30,7 @@ class GomokuCollection:
 
         #Stores all the moves in order
         self.orderedMoves = []
-
+        self.history = []
         # The weights of the 2,3,4 in a rows. should be experimented and changed
         self.score2 = score2
         self.score3 = score3
@@ -75,8 +75,10 @@ class GomokuCollection:
             
 
     def addNewMove(self, move):
-
+        self.history += ["Add Move: " + str(move)]
         if(DEBUG): print("Adding Move: " + str(move))
+        #print("History: ")
+       # print(self.history)
         """
         Adds a move and creates up to 4 InARow objects of length 1. 
         Then, it tries to join itself with existing InARow objects
@@ -90,6 +92,8 @@ class GomokuCollection:
         # Tries to join the new move with previous InARow objects
         for row in rows:
             if (row.numRow == 1): self.scorable.add(row)
+
+
             row.addMove(move)
             self.tryAdd(row.head, row)
             # self.dictionary[row.head].add(row)
@@ -111,11 +115,14 @@ class GomokuCollection:
 
     # tries to add a move to the dictionary
     def tryAdd(self, key, move):
-        if (key not in self.dictionary): self.dictionary[key] = set()
-        self.dictionary[key].add(move)
+        if(not(key[0] > 14 or key[0] < 0 or key[1] > 14 or key[1] < 0)):
+            print("WOW its the key!: " + str(key))
+            if (key not in self.dictionary): self.dictionary[key] = set()
+            self.dictionary[key].add(move)
 
     def undoMove(self):
         curMove = self.orderedMoves.pop()
+        self.history += ["Remove Move: " + str(curMove)]
         if (DEBUG):
             print("Removing move: " + str(curMove))
         x = curMove[0]
@@ -180,8 +187,8 @@ class InARow:
     """
 
     def setHeadTail(self, move):
-        self.head = move[0]
-        self.tail = move[1]
+        if (not (move[0][0] > 14 or move[0][0] < 0 or move[0][1] > 14 or move[0][1] < 0)): self.head = move[0]
+        if (not (move[1][0] > 14 or move[1][0] < 0 or move[1][1] > 14 or move[1][1] < 0)): self.tail = move[1]
 
     def initValidCont(self, move):
         x = move[0]
@@ -192,6 +199,7 @@ class InARow:
     def addMove(self, move):
         isOne = self.numRow == 1
         self.updateLength()
+
         self.setValidVector(move, isOne)
         self.pos += [move]
 
@@ -199,12 +207,14 @@ class InARow:
         if (isOne):
             self.dx = move[0] - self.pos[0][0]
             self.dy = move[1] - self.pos[0][1]
-            self.head = (move[0] + self.dx, move[1] + self.dy)
-            self.tail = (self.pos[0][0] - self.dx, self.pos[0][1] - self.dy)
+            if not((move[0] + self.dx > 14 or move[0] + self.dx < 0) or (move[1] + self.dy > 14 or move[1] + self.dy < 0)):
+                self.head = (move[0] + self.dx, move[1] + self.dy)
+            if not(self.pos[0][0] - self.dx > 14 or self.pos[0][0] - self.dx < 0):
+                self.tail = (self.pos[0][0] - self.dx, self.pos[0][1] - self.dy)
         else:
-            if (move == self.head):
+            if (move == self.head): # and not(move[0] >= 14 or move[0] <= 0 or move[1] >= 14 or move[1] <= 0)):
                 self.head = (self.head[0] + self.dx, self.head[1] + self.dy)
-            elif (move == self.tail):
+            elif (move == self.tail): # and not(move[0] >= 14 or move[0] <= 0 or move[1] >= 14 or move[1] <= 0)):
                 self.tail = (self.tail[0] - self.dx, self.tail[1] - self.dy)
             else:
                 pass
@@ -212,6 +222,7 @@ class InARow:
                 #print("Current Value: " + str(move))
                 #print("Head: " + str(self.head))
                 #print("Tail: " + str(self.tail))
+
                 # self.validCont = [(newMove[0]+self.dx, newMove[0]+self.dy), (self.pos[0][0]-self.dx, self.pos[0][1]-self.dx)]
 
     def updateLength(self):

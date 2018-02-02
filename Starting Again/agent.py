@@ -86,13 +86,18 @@ def addMoveToBoard(i, j, ourMove):
     global white
     global black
     global board
-    print(i,j)
     if not ourMove:
-        black.addNewMove((i, j))
-        board[i, j] = -1
+        try:
+            board[i, j] = -1
+            black.addNewMove((i, j))
+        except:
+            print("Bhon lied its still going out of bounds " + str(i) + " " + str(j))
     else:
-        white.addNewMove((i, j))
-        board[i, j] = 1
+        try:
+            board[i, j] = 1
+            white.addNewMove((i, j))
+        except:
+            print("Bhon lied its still going out of bounds" + str(i) + " " + str(j))
     # Remove the move from the validMoves list
     # validMoves.remove((i,j))
     return
@@ -125,14 +130,15 @@ def minimax():
     global black
     global bestMove
     validMoves = getValidMoves()
-    maxScore = float("-inf")
+    maxScore = -10
 
     if(DEBUG):
+        print("Printing Valid Moves Obtained: ")
         print(validMoves)
     for move in validMoves:
         addMoveToBoard(move[0], move[1], True)
         # curScore = white.getScore()-black.getScore()
-        curScore = getMaxValue(float("-inf"), float("inf"), 2)
+        curScore = getMaxValue(float("-inf"), float("-inf"), 3)
         if(maxScore < curScore):
             if(DEBUG): print(move)
             maxScore=curScore
@@ -191,30 +197,5 @@ def getMinValue(alpha, beta, depth):
             beta = min(beta, value)
     return value
 
-
-
-
-# def minimax(team):
-#     global bestValue
-#     global bestMove
-#     # choose a move
-#     for move in validMoves:
-#         if(DEBUG):
-#             #print("Best Move: " +  str(bestMove))
-#             pass
-#         # add each move to the board and get the value
-#         addMove(team, move[0], move[1])
-#         timeLimitForMove = 1000/len(validMoves)
-#         currentMaxVal = ID(timeLimitForMove)
-#         if(DEBUG):
-#             #print("current max val: " + str(currentMaxVal))
-#             pass
-#         if (currentMaxVal >= winScoreCutOff):
-#             return (move[0], columns[move[1]])
-#         if (bestValue < currentMaxVal):
-#             bestValue = currentMaxVal
-#             bestMove = move
-#         deleteMove(team, move[0], move[1])
-#     return (bestMove[0], columns[bestMove[1]])
-
 returns = init()
+
