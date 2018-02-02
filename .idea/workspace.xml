@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="028decfe-30a0-49ba-8a13-e3edd97c25ce" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Starting Again/Large_Horse.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Starting Again/agent.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Starting Again/agent2.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Starting Again/boardlib.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Starting Again/move_file" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Starting Again/referee.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boardlib.py" afterPath="$PROJECT_DIR$/boardlib.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Starting Again/agent.py" afterPath="$PROJECT_DIR$/Starting Again/agent.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Starting Again/boardlib.py" afterPath="$PROJECT_DIR$/Starting Again/boardlib.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Starting Again/move_file" afterPath="$PROJECT_DIR$/Starting Again/move_file" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -28,22 +24,10 @@
       <file leaf-file-name="agent.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Starting Again/agent.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="38" column="54" lean-forward="true" selection-start-line="38" selection-start-column="54" selection-end-line="38" selection-end-column="54" />
+            <state relative-caret-position="184">
+              <caret line="158" column="87" lean-forward="false" selection-start-line="158" selection-start-column="87" selection-end-line="158" selection-end-column="87" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="referee.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Starting Again/referee.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#14#28#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -52,8 +36,8 @@
       <file leaf-file-name="boardlib.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Starting Again/boardlib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="42" column="29" lean-forward="false" selection-start-line="42" selection-start-column="15" selection-end-line="42" selection-end-column="29" />
+            <state relative-caret-position="371">
+              <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="8" selection-end-line="39" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -63,20 +47,8 @@
         <entry file="file://$PROJECT_DIR$/Starting Again/move_file">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
+              <caret line="0" column="15" lean-forward="false" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="15" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="agent.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/agent.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="302">
-              <caret line="168" column="0" lean-forward="false" selection-start-line="168" selection-start-column="0" selection-end-line="176" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -95,9 +67,10 @@
       <find>dictionary</find>
       <find>del</find>
       <find>large</find>
-      <find>self.dictionary</find>
       <find>bestMove</find>
+      <find>self.dictionary</find>
       <find>board</find>
+      <find>validMove</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -117,8 +90,8 @@
         <option value="$PROJECT_DIR$/move_file" />
         <option value="$PROJECT_DIR$/agent.py" />
         <option value="$PROJECT_DIR$/boardlib.py" />
-        <option value="$PROJECT_DIR$/Starting Again/boardlib.py" />
         <option value="$PROJECT_DIR$/Starting Again/agent2.py" />
+        <option value="$PROJECT_DIR$/Starting Again/boardlib.py" />
         <option value="$PROJECT_DIR$/Starting Again/move_file" />
         <option value="$PROJECT_DIR$/Starting Again/agent.py" />
       </list>
@@ -639,7 +612,7 @@
         <state relative-caret-position="663">
           <caret line="39" column="17" lean-forward="false" selection-start-line="39" selection-start-column="17" selection-end-line="39" selection-end-column="17" />
           <folding>
-            <element signature="e#14#28#0" expanded="true" />
+            <element signature="e#14#28#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -668,20 +641,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Starting Again/boardlib.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="42" column="29" lean-forward="false" selection-start-line="42" selection-start-column="15" selection-end-line="42" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Starting Again/referee.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#14#28#0" expanded="true" />
+            <element signature="e#14#28#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -696,18 +661,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Starting Again/boardlib.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="371">
+          <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="8" selection-end-line="39" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Starting Again/move_file">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="5" lean-forward="false" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
+          <caret line="0" column="15" lean-forward="false" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Starting Again/agent.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="38" column="54" lean-forward="true" selection-start-line="38" selection-start-column="54" selection-end-line="38" selection-end-column="54" />
+        <state relative-caret-position="184">
+          <caret line="158" column="87" lean-forward="false" selection-start-line="158" selection-start-column="87" selection-end-line="158" selection-end-column="87" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
           </folding>
