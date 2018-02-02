@@ -99,8 +99,7 @@ def addMoveToBoard(i, j, ourMove):
             white.addNewMove((i, j))
         except:
             print("Bhon lied its still going out of bounds" + str(i) + " " + str(j))
-    # Remove the move from the validMoves list
-    # validMoves.remove((i,j))
+
     if not DEBUG: print(board)
     return
 
@@ -133,7 +132,7 @@ def minimax():
     global black
     global bestMove
     validMoves = getValidMoves()
-    maxScore = -10
+    maxScore = float("-inf")
 
     if(DEBUG):
         print("Printing Valid Moves Obtained: ")
@@ -141,7 +140,7 @@ def minimax():
     for move in validMoves:
         addMoveToBoard(move[0], move[1], True)
         # curScore = white.getScore()-black.getScore()
-        curScore = getMaxValue(float("-inf"), float("-inf"), 3)
+        curScore = getMaxValue(float("-inf"), float("inf"), 3)
         if(maxScore < curScore):
             if(DEBUG): print(move)
             maxScore=curScore
