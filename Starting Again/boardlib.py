@@ -37,6 +37,12 @@ class GomokuCollection:
         self.score4 = score4
         # when a moved is played, this move should be called
 
+    def getValidMoves(self):
+        fromDictionary = set(self.dictionary.keys())
+        movesMade = set(self.orderedMoves)
+        return fromDictionary.symmetric_difference(movesMade)
+
+
     #sdf
     def debugPrint(self, include1 = False, fulldebug = False):
         print("Init Debugging")
@@ -119,17 +125,19 @@ class GomokuCollection:
         if(DEBUG):
             print(self.dictionary)
         for e1 in boundaryList:
-            self.dictionary[e1] = set(s for s in self.dictionary[e1] if curMove not in s.pos)
-            if(len(self.dictionary[e1])==0): del self.dictionary[e1]
+            if(e1 in self.dictionary.keys()):
+                self.dictionary[e1] = set(s for s in self.dictionary[e1] if curMove not in s.pos)
+                if(len(self.dictionary[e1])==0): del self.dictionary[e1]
                 
         #For objects of length greater than 1
         #-> reduce count by 1
         #-> change head tail
         #-> remove from position
-        for move in self.dictionary[curMove]:
-            move.removeMove(curMove)
-            if(move.numRow <2):
-                self.scorable.remove(move)
+        if(curMove in self.dictionary.keys()):
+            for move in self.dictionary[curMove]:
+                move.removeMove(curMove)
+                if(move.numRow <2):
+                    self.scorable.remove(move)
                     
                 
 
