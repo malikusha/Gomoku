@@ -79,11 +79,13 @@ def init():
                 f.write(makeMove())
                 f.close()
 
+
     return
 
 def addMoveToBoard(i, j, ourMove):
     global white
     global black
+    global board
 
     if not ourMove:
         black.addNewMove((i, j))
@@ -97,6 +99,10 @@ def addMoveToBoard(i, j, ourMove):
     return
 
 def removeMoveFromBoard(i, j, ourMove):
+    global white
+    global black
+    global board
+
     if (not ourMove):
         black.undoMove()
     else:
@@ -108,8 +114,7 @@ def makeMove():
     global bestMove
     minimax()
     addMoveToBoard(bestMove[0], bestMove[1], True)
-    #r = random.randint(0, 14)
-    #t = random.randint(0, 14)
+    print(board)
     return TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1)
 
 """
@@ -147,9 +152,12 @@ def minimax():
 def getValidMoves():
     global white
     global black
-    whiteValidMoves = white.getValidMoves()
-    blackValidMoves = black.getValidMoves()
-    return (whiteValidMoves | blackValidMoves)
+    whitePotentialMoves = white.getPotentialMoves()
+    whiteMovesMade = white.getMovesMade()
+    blackPotentialMoves = black.getPotentialMoves()
+    blackMovesMade = black.getMovesMade()
+    y = ((whitePotentialMoves | blackPotentialMoves) - (whiteMovesMade|blackMovesMade))
+    return y
 
 def getMaxValue(alpha, beta, depth):
     if (depth == 0):
@@ -184,9 +192,6 @@ def getMinValue(alpha, beta, depth):
                 return value
             beta = min(beta, value)
     return value
-
-def DLS(depthLimit):
-    global white
 
 
 

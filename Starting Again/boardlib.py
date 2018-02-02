@@ -37,11 +37,12 @@ class GomokuCollection:
         self.score4 = score4
         # when a moved is played, this move should be called
 
-    def getValidMoves(self):
-        fromDictionary = set(self.dictionary.keys())
-        movesMade = set(self.orderedMoves)
-        return fromDictionary.symmetric_difference(movesMade)
+    def getPotentialMoves(self):
+        return set(self.dictionary.keys())
 
+
+    def getMovesMade(self):
+        return set(self.orderedMoves)
 
     #sdf
     def debugPrint(self, include1 = False, fulldebug = False):
