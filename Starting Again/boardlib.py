@@ -18,7 +18,7 @@ DEBUG = False
 class GomokuCollection:
     # Initializes the GomokuCollection object. scoreN represents the weights
     # Given to n-in-a-rows
-    def __init__(self, score2=2, score3=3, score4=4):
+    def __init__(self, score2=2, score3=5, score4=10):
         # the dictionary basically links a coordinate with all InARow objects that can grow
         # (IE by placing a piece there the InARoW object evolves from an N in a row to an
         # N+1 in a row
@@ -116,7 +116,7 @@ class GomokuCollection:
     # tries to add a move to the dictionary
     def tryAdd(self, key, move):
         if(not(key[0] > 14 or key[0] < 0 or key[1] > 14 or key[1] < 0)):
-            print("WOW its the key!: " + str(key))
+            #print("WOW its the key!: " + str(key))
             if (key not in self.dictionary): self.dictionary[key] = set()
             self.dictionary[key].add(move)
 
@@ -217,13 +217,12 @@ class InARow:
             elif (move == self.tail): # and not(move[0] >= 14 or move[0] <= 0 or move[1] >= 14 or move[1] <= 0)):
                 self.tail = (self.tail[0] - self.dx, self.tail[1] - self.dy)
             else:
-                print("asdfasdf")
-                print("Error in the setValidvector")
-                print("Current Value: " + str(move))
-                print("Head: " + str(self.head))
-                print("Tail: " + str(self.tail))
-                print("asdfasdfasdfasdfasdfasdfasdfa")
-                print("asdfasdfasfd")
+                pass
+                #print("Error in the setValidvector")
+                #print("Current Value: " + str(move))
+                #print("Head: " + str(self.head))
+                #print("Tail: " + str(self.tail))
+
                 # self.validCont = [(newMove[0]+self.dx, newMove[0]+self.dy), (self.pos[0][0]-self.dx, self.pos[0][1]-self.dx)]
 
     def updateLength(self):

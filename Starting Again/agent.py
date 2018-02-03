@@ -14,7 +14,8 @@ COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 TIME_LIMIT = 10  # Seconds
 BOARD_SIZE = 15
-DEBUG = True # if DEBUG: print("")
+DEBUG = False # if DEBUG: print("")
+DEBUG2 = False
 WIN_SCORE_CUTOFF = 1000000 #If heuristics weight is higher than this score, than it is a win
 
 # Objects
@@ -35,17 +36,18 @@ board = np.zeros((BOARD_SIZE, BOARD_SIZE), dtype=int)
 
 def init():
     global firstPlayer
-    if not DEBUG: print(board)
+    global bestValue
     # The Player stops playing once the game has ended
     while "end_game" not in os.listdir("."):
 
         # The player moves only if "Large_Horse.go" file appears in directory
         if TEAM_NAME+".go" in os.listdir("."):
-
+            time.sleep(0.5)
             # Check move_file to read the current moves
             move_file = open("move_file", 'r')
             move = move_file.read()
             move_file.close()
+            time.sleep(1)
             # On first turn, need to denote whether player is playing first in start of game or not
             if not move:
                 # There are no previous moves, therefore player is playing first in the game
@@ -60,6 +62,7 @@ def init():
                 addMoveToBoard(7, 7, True)
 
             elif move.split()[0] != TEAM_NAME:
+                bestValue = float("-inf")
 
                 # Player is not starting player in beginning of game
                 # Because there will always be a move in other turns,
@@ -69,15 +72,12 @@ def init():
 
                 # Obtain row and column of enemy player move
                 row = int(move.split()[2]) - 1
-                col = COLUMNS.index(move.split()[1])
-                if DEBUG: print("ROW: %i, COLUMN: %i" % (row,col))
+                col = COLUMNS.index(move.split()[1].upper())
+                if DEBUG2: print("ROW: %i, COLUMN: %i" % (row,col))
 
                 addMoveToBoard(row, col, False)  # add enemy move to board
-
                 # Obtain the enemy player move, update move to internal board, and make a move and write to file
-                f = open("move_file", 'w')
-                f.write(makeMove())
-                f.close()
+                makeMove()
 
 
     return
@@ -86,7 +86,6 @@ def addMoveToBoard(i, j, ourMove):
     global white
     global black
     global board
- #TODO: Fix this properly
     if not ourMove:
         try:
             board[i, j] = -1
@@ -99,7 +98,6 @@ def addMoveToBoard(i, j, ourMove):
             white.addNewMove((i, j))
         except:
             print("Bhon lied its still going out of bounds" + str(i) + " " + str(j))
-
     if not DEBUG: print(board)
     return
 
@@ -118,9 +116,13 @@ def removeMoveFromBoard(i, j, ourMove):
 def makeMove():
     global bestMove
     minimax()
+    print("Best Move")
+    print(bestMove)
     addMoveToBoard(bestMove[0], bestMove[1], True)
-    print(board)
-    return TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1)
+    f = open("move_file", 'w')
+    f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
+    f.close()
+
 
 """
 opponent's move: d5 
@@ -227,5 +229,5 @@ def getMinValue(alpha, beta, depth, curTime, timeLimit):
             beta = min(beta, value)
     return value
 
-
 returns = init()
+
