@@ -176,9 +176,6 @@ def getMinValue(alpha, beta, depth):
             beta = min(beta, value)
     return value
 
-def DLS(depthLimit):
-    global white
-
 
 
 

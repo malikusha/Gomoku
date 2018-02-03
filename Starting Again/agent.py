@@ -131,22 +131,42 @@ def minimax():
     global white
     global black
     global bestMove
+    global cutOff
     validMoves = getValidMoves()
     maxScore = float("-inf")
+    depthLimit = 1
+    curScore = 0
+    stopTime = time.time()+(TIME_LIMIT+50)/len(validMoves)
 
     if(DEBUG):
         print("Printing Valid Moves Obtained: ")
         print(validMoves)
     for move in validMoves:
         addMoveToBoard(move[0], move[1], True)
-        # curScore = white.getScore()-black.getScore()
-        curScore = getMaxValue(float("-inf"), float("inf"), 3)
+
+        while (1):
+            curTime = time.time()
+            if (curTime >= stopTime):
+                print("BREAK!")
+                break
+            if (DEBUG): print("depthLimit", str(depthLimit))
+
+            maxVal = getMaxValue(float("-inf"), float("inf"), depthLimit, curTime, stopTime-curTime)
+
+            if (not cutOff):
+                curScore = maxVal
+            if (curScore >= WIN_SCORE_CUTOFF):
+                return curScore
+            depthLimit += 1
+        cutOff = False
+
         if(maxScore < curScore):
             if(DEBUG): print(move)
             maxScore=curScore
             bestMove = move
             if DEBUG: print("Best Move: " + str(bestMove))
         removeMoveFromBoard(move[0], move[1], True)
+
     if(DEBUG):
         print("Best Move: " + str(bestMove))
         print("Best Score: " + str(maxScore))
@@ -165,15 +185,19 @@ def getValidMoves():
     y = ((whitePotentialMoves | blackPotentialMoves) - (whiteMovesMade|blackMovesMade))
     return y
 
-def getMaxValue(alpha, beta, depth):
-    if (depth == 0):
+def getMaxValue(alpha, beta, depth, curTime, timeLimit):
+    global cutOff
+    eval = white.getScore()-black.getScore()
+    if (time.time()-curTime >= timeLimit):
+        cutOff = True
+    if (not validMoves or eval >= WIN_SCORE_CUTOFF or cutOff or depth == 0):
         if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
-        return white.getScore()-black.getScore()
+        return eval
     else:
         value = float("-inf")
         for move in getValidMoves():
             addMoveToBoard(move[0], move[1], True)
-            child = getMinValue(alpha, beta, depth - 1)
+            child = getMinValue(alpha, beta, depth - 1, curTime, timeLimit)
             value = max(value, child)
             removeMoveFromBoard(move[0], move[1], True)
             if (value >= beta):
@@ -182,15 +206,19 @@ def getMaxValue(alpha, beta, depth):
             alpha = max(alpha, value)
     return value
 
-def getMinValue(alpha, beta, depth):
-    if (depth == 0):
-        if DEBUG: print("Val: "+str(white.getScore()-black.getScore()))
-        return white.getScore()-black.getScore()
+def getMinValue(alpha, beta, depth, curTime, timeLimit):
+    global cutOff
+    eval = white.getScore() - black.getScore()
+    if (time.time() - curTime >= timeLimit):
+        cutOff = True
+    if (not validMoves or eval >= WIN_SCORE_CUTOFF or cutOff or depth == 0):
+        if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
+        return eval
     else:
         value = float("inf")
         for move in getValidMoves():
             addMoveToBoard(move[0], move[1], False)
-            child = getMaxValue(alpha, beta, depth - 1)
+            child = getMaxValue(alpha, beta, depth - 1, curTime, timeLimit)
             value = min(value, child)
             removeMoveFromBoard(move[0], move[1], False)
             if (value <= alpha):
