@@ -12,7 +12,7 @@ COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 TIME_LIMIT = 10  # Seconds
 BOARD_SIZE = 15
-DEBUG = False # if DEBUG: print("")
+DEBUG = True # if DEBUG: print("")
 DEBUG2 = False
 WIN_SCORE_CUTOFF = 1000000 #If heuristics weight is higher than this score, than it is a win
 
@@ -174,7 +174,7 @@ def minimax():
         print("Printing Valid Moves Obtained: ")
         print(validMoves)
     for move in validMoves:
-        stopTime = time.time() + (TIME_LIMIT-2)/len(validMoves)
+        stopTime = time.time() + (TIME_LIMIT-3)/len(validMoves)
         if (DEBUG):
             print("should go to next node at ", str(stopTime))
             print("given this many seconds ", str(stopTime-time.time()))
@@ -190,23 +190,31 @@ def minimax():
             depthLimit += 1
             if (DEBUG): print("currentMax: ", str(maxVal))
 
-            if (not cutOff):
-                curScore = maxVal
-                if (DEBUG): print("not cutoff")
             if (curScore >= WIN_SCORE_CUTOFF):
                 maxScore = curScore
                 bestMove = move
                 removeMoveFromBoard(move[0], move[1], True)
                 return
 
+            if (not cutOff):
+                curScore = maxVal
+                if (DEBUG): print("not cutoff")
+
+
         cutOff = False
         depthLimit = 1
+        if(curScore >= WIN_SCORE_CUTOFF):
+            maxScore = curScore
+            bestMove = move
+            removeMoveFromBoard(move[0], move[1], True)
+            return
 
         if(maxScore < curScore):
             if(DEBUG): print("current move ", str(move))
             maxScore=curScore
             bestMove = move
             if DEBUG: print("Best Move so far: " + str(bestMove))
+
         removeMoveFromBoard(move[0], move[1], True)
 
 
