@@ -1,4 +1,11 @@
 import gomokuCollection as board
+COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+def algebraToMove(move):
+    row = int(move.split()[2]) - 1
+    col = COLUMNS.index(move.split()[1].upper())
+def moveToAlgebra(coord):
+    return (COLUMNS[coord[1]], coord[0]+1)
 
 def testExpect(check, expect):
     print("Actual Value: " + str(check) + " Expected Value: " + str(expect))
@@ -175,3 +182,49 @@ cyan.undoMove()
 cyan.addMove((3,4))
 cyan.addMove((4,3))
 testExpect(cyan.getScore(),4)
+
+def lookAtTheHistoryFile():
+    f = open("history_file", 'r')
+    x = []
+    for e in f.read().split('\n')[:-1]:
+    
+        y = e.split(' ')
+        print(y)
+        row = int(y[2]) - 1
+        col = agent.COLUMNS.index(y[1].upper())
+        if(y[0] == TEAM_NAME):
+            x +=[('a', (row,col))]
+        else:
+            x +=[('ae', (row,col))]
+    print("national history day :")
+    print(x)
+    for e in x:
+        print("Cur Val: " + str(e))
+        if(e[0] == 'a'):
+            agent.addMoveToBoard(e[1][0], e[1][0], True)
+        else:
+            agent.addMoveToBoard(e[1][0], e[1][0], False)
+    agent.getHistory('w')
+    return(x)
+def printSomeActionTables(actionTable):
+    gmk = board.GomokuCollection()
+    for e in actionTable:
+        print(e)
+        if(e[0] == 'r'):
+            gmk.undoMove()
+        elif(e[0] == 'a'):
+            gmk.addMove(e[1])
+        elif(e[0] == 'ae'):
+            gmk.addEnemyMove(e[1])
+        elif(e[0] == 're'):
+            gmk.addEnemyMove(e[1])
+        else:
+            raise Exception("wow go work at mcdonalds you cant code for shit")
+    print("Movelist: ")
+    x = []
+    for e in gmk.orderedMoves:
+        x+= [convertToAlgebraicCoord(e)]
+    return gmko
+   
+x = lookAtTheHistoryFile()
+printSomeActionTables(x)

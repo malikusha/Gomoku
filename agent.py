@@ -14,7 +14,7 @@ TIME_LIMIT = 10  # Seconds
 BOARD_SIZE = 15
 DEBUG = False # if DEBUG: print("")
 DEBUG2 = False
-WIN_SCORE_CUTOFF = 1000000 #If heuristics weight is higher than this score, than it is a win
+WIN_SCORE_CUTOFF = 100000 #If heuristics weight is higher than this score, than it is a win
 
 # Objects
 white = boardlib.GomokuCollection()
@@ -127,7 +127,7 @@ def removeMoveFromBoard(i, j, ourMove):
 def makeMove():
     global bestMove
     global white
-    minimax()
+    minimax2()
     addMoveToBoard(bestMove[0], bestMove[1], True)
     f = open("move_file", 'w')
     f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))

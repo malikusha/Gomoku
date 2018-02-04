@@ -41,12 +41,12 @@ def init():
 
         # The player moves only if "Large_Horse.go" file appears in directory
         if TEAM_NAME+".go" in os.listdir("."):
-            time.sleep(0.5)
+            time.sleep(0.1)
             # Check move_file to read the current moves
             move_file = open("move_file", 'r')
             move = move_file.read()
             move_file.close()
-            time.sleep(1)
+            time.sleep(.1)
             # On first turn, need to denote whether player is playing first in start of game or not
             if not move:
                 # There are no previous moves, therefore player is playing first in the game
@@ -127,7 +127,7 @@ def removeMoveFromBoard(i, j, ourMove):
 def makeMove():
     global bestMove
     global white
-    minimax()
+    minimax2()
     addMoveToBoard(bestMove[0], bestMove[1], True)
     f = open("move_file", 'w')
     f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
@@ -152,11 +152,9 @@ def minimax2():
     for move in validMoves:
         addMoveToBoard(move[0], move[1], True)
         curScore = white.getScore()-black.getScore()
-        print("Score: " + str(curScore))
         if(curScore > maxScore):
             maxScore = curScore
             bestMove = move
-            print("Cur best move: " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
         removeMoveFromBoard(move[0], move[1], True)
     return
 
