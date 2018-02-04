@@ -127,7 +127,7 @@ def removeMoveFromBoard(i, j, ourMove):
 def makeMove():
     global bestMove
     global white
-    minimax2()
+    minimax()
     addMoveToBoard(bestMove[0], bestMove[1], True)
     f = open("move_file", 'w')
     f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
