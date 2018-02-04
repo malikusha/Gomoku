@@ -174,7 +174,7 @@ def minimax():
         print("Printing Valid Moves Obtained: ")
         print(validMoves)
     for move in validMoves:
-        stopTime = time.time() + (TIME_LIMIT-3)/len(validMoves)
+        stopTime = time.time() + (TIME_LIMIT-4)/len(validMoves)
         if (DEBUG):
             print("should go to next node at ", str(stopTime))
             print("given this many seconds ", str(stopTime-time.time()))
@@ -196,8 +196,9 @@ def minimax():
                 removeMoveFromBoard(move[0], move[1], True)
                 return
 
-            if (not cutOff):
+            if (not cutOff and maxVal>curScore):
                 curScore = maxVal
+                bestMove = move
                 if (DEBUG): print("not cutoff")
 
 
@@ -223,7 +224,7 @@ def getValidMoves():
     global black
     whitePotentialMoves = white.getPotentialMoves()
     blackPotentialMoves = black.getPotentialMoves()
-    return (whitePotentialMoves | blackPotentialMoves) 
+    return (whitePotentialMoves | blackPotentialMoves)
     
 
 def getMaxValue(alpha, beta, depth, curTime, timeLimit):
