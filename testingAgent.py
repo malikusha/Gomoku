@@ -8,7 +8,8 @@ def testExpect(check, expect):
     else:
         raise Exception('testExpect Failed!')
 
-
+TEAM_NAME = "Large_Horse"
+"""
 agent.addMoveToBoard(1, 2, True)
 agent.addMoveToBoard(1, 3, False)
 aSet = set([(0, 1), (0, 4), (2, 1), (0, 2), (2, 3),
@@ -40,7 +41,32 @@ for e in actionTable:
     else:
         raise Exception("wow go work at mcdonalds you cant code for shit")
     print(agent.getValidMoves())
+"""
 
+def lookAtTheHistoryFile():
+    f = open("history_file", 'r')
+    x = []
+    for e in f.read().split('\n')[:-1]:
+    
+        y = e.split(' ')
+        print(y)
+        row = int(y[2]) - 1
+        col = agent.COLUMNS.index(y[1].upper())
+        if(y[0] == TEAM_NAME):
+            x +=[('a', (row,col))]
+        else:
+            x +=[('ae', (row,col))]
+    print("national history day :")
+    print(x)
+    for e in x:
+        print("Cur Val: " + str(e))
+        if(e[0] == 'a'):
+            agent.addMoveToBoard(e[1][0], e[1][0], True)
+        else:
+            agent.addMoveToBoard(e[1][0], e[1][0], False)
+    agent.getHistory('w')
+    return(x)
+x = lookAtTheHistoryFile()
 """
  01234567
 0########

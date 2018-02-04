@@ -4,8 +4,6 @@ import theNewBoardLib as boardlib
 
 """ TODO
 FOR boardlib
-make sure that all pieces have to be within the borders of the board of the game
-
 """
 
 # Constants - Variables that won't change
@@ -93,6 +91,7 @@ def addMoveToBoard(i, j, ourMove):
             board[i, j] = -1
             black.addMove((i, j))
             white.addEnemyMove((i,j))
+            
         except Exception as e:
             white.debugPrintDictionary()
             print(white.history)
@@ -104,6 +103,7 @@ def addMoveToBoard(i, j, ourMove):
             board[i, j] = 1
             white.addMove((i, j))
             black.addEnemyMove((i,j))
+            print("how often is this actually done?")
         except Exception as e:
             print("Bhon lied its still going out of bounds" + str(i) + " " + str(j))
             print(e)
@@ -127,15 +127,8 @@ def makeMove():
     global bestMove
     global white
     global black
-    minimax()
-    print("Best Move")
-    print(bestMove)
+    minimax2()
     addMoveToBoard(bestMove[0], bestMove[1], True)
-    print("Dictionary: ")
-    print("white: ")
-    print(white.history)
-    print("black: ")
-    print(black.history)
     f = open("move_file", 'w')
     f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
     f.close()
@@ -147,11 +140,22 @@ valid moves: e5, c5, d4, d6, e4, e6, c4, c6
 scans all of them, pick any move
 """
 
+
 def minimax2():
     global white
     global black
     global bestMove
     global cutOff
+    validMoves = getValidMoves()
+    maxScore = -1<<31
+    for move in validMoves:
+        addMoveToBoard(move[0], move[1], True)
+        curScore = white.getScore()-black.getScore()
+        print("Score: " + str(curScore))
+        if(curScore > maxScore):
+            maxScore = curScore
+            bestMove = move
+        removeMoveFromBoard(move[0], move[1], True)
     return
 
 def minimax():
@@ -250,6 +254,21 @@ def getMinValue(alpha, beta, depth, curTime, timeLimit):
                 return value
             beta = min(beta, value)
     return value
+
+
+#### FUNCTIONS FOR DEBUGGING PURPOSES #####
+def getBestMove():
+    global bestMove
+    print("Best Move: " + bestMove)
+def getHistory(team):
+    if(team == 'w'):
+        global white
+        return white.history
+    elif(team == 'b'):
+        global black
+        return black.history
+    else:
+        raise Exception("Go to MacDonalds pls")
 
 returns = init()
 
