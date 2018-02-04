@@ -78,6 +78,7 @@ class GomokuCollection:
                         if((headBlock and not tailBlock) or (not headBlock and tailBlock)):
                             totalScore += self.score[curLen]
                         if(not (headBlock or tailBlock)):
+                            if(curLen == 4): return 1000
                             totalScore += 2*self.score[curLen]
         if(totalScore > 900000): return self.score[5]
         return totalScore
