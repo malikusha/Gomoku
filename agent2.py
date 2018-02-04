@@ -172,7 +172,7 @@ def minimax():
         print("Printing Valid Moves Obtained: ")
         print(validMoves)
     for move in validMoves:
-        stopTime = time.time() + (TIME_LIMIT-2)/len(validMoves)
+        stopTime = time.time() + (TIME_LIMIT-3)/len(validMoves)
         if (DEBUG):
             print("should go to next node at ", str(stopTime))
             print("given this many seconds ", str(stopTime-time.time()))
