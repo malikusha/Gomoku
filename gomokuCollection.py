@@ -1,6 +1,6 @@
 class GomokuCollection:
 
-    def __init__(self, length = 15, width = 15, score2=2, score3=5, score4=10, score5 = 10000000):
+    def __init__(self, length = 15, width = 15, score2=2, score3=9, score4=15, score5 = 10000000):
         self.board = [[0 for x in range(length)] for y in range(width)] 
         self.orderedMoves = []
         self.score = [0,0,score2,score3,score4,score5]
@@ -75,10 +75,11 @@ class GomokuCollection:
                     headTail = (head,tail)
                     if(headTail not in alreadyExistingHeadTails):
                         alreadyExistingHeadTails.add(headTail)
+                        if(curLen >= 5): return self.score[5]
                         if((headBlock and not tailBlock) or (not headBlock and tailBlock)):
                             totalScore += self.score[curLen]
                         if(not (headBlock or tailBlock)):
+                            if(curLen == 4): return 1000
                             totalScore += 2*self.score[curLen]
-        if(totalScore > 900000): return self.score[5]
         return totalScore
 
