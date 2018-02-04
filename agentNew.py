@@ -1,6 +1,6 @@
 import os, math, time, threading, random
 import numpy as np
-import boardlib as boardlib
+import theNewBoardLib as boardlib
 
 """ TODO
 FOR boardlib
@@ -14,7 +14,7 @@ COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 TIME_LIMIT = 10  # Seconds
 BOARD_SIZE = 15
-DEBUG = True # if DEBUG: print("")
+DEBUG = False # if DEBUG: print("")
 DEBUG2 = False
 WIN_SCORE_CUTOFF = 1000000 #If heuristics weight is higher than this score, than it is a win
 
@@ -26,6 +26,7 @@ black = boardlib.GomokuCollection()
 firstPlayer = True
 playerMoves = []
 enemyMoves = []
+firstMove = True
 
 validMoves = []  # Holds a list of all valid moves in the vicinity
 bestMove = None
@@ -62,6 +63,7 @@ def init():
                 addMoveToBoard(7, 7, True)
 
             elif move.split()[0] != TEAM_NAME:
+                if(DEBUG): print("Init making a move")
                 bestValue = float("-inf")
 
                 # Player is not starting player in beginning of game
@@ -89,16 +91,26 @@ def addMoveToBoard(i, j, ourMove):
     if not ourMove:
         try:
             board[i, j] = -1
-            black.addNewMove((i, j))
-        except:
+            black.addMove((i, j))
+            white.addEnemyMove((i,j))
+        except Exception as e:
+            white.debugPrintDictionary()
+            print(white.history)
+            print(black.history)
             print("Bhon lied its still going out of bounds " + str(i) + " " + str(j))
+            print("Wooooooooooooo")
     else:
         try:
             board[i, j] = 1
-            white.addNewMove((i, j))
-        except:
+            white.addMove((i, j))
+            black.addEnemyMove((i,j))
+        except Exception as e:
             print("Bhon lied its still going out of bounds" + str(i) + " " + str(j))
-    if not DEBUG: print(board)
+            print(e)
+            print(white.history)
+            print(black.history)
+            print("Wooooooooooooo")
+    #if not DEBUG: print(board)
     return
 
 def removeMoveFromBoard(i, j, ourMove):
@@ -106,31 +118,42 @@ def removeMoveFromBoard(i, j, ourMove):
     global black
     global board
 
-    if (not ourMove):
-        black.undoMove()
-    else:
-        white.undoMove()
+    black.undoMove()
+    white.undoMove()
     board[i, j] = 0
     return
 
 def makeMove():
     global bestMove
+    global white
+    global black
     minimax()
     print("Best Move")
     print(bestMove)
     addMoveToBoard(bestMove[0], bestMove[1], True)
+    print("Dictionary: ")
+    print("white: ")
+    print(white.history)
+    print("black: ")
+    print(black.history)
     f = open("move_file", 'w')
     f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
     f.close()
 
-def getBestMove():
-    global bestMove
-    print("Best Move: " + str(bestMove))
+
 """
 opponent's move: d5 
 valid moves: e5, c5, d4, d6, e4, e6, c4, c6
 scans all of them, pick any move
 """
+
+def minimax2():
+    global white
+    global black
+    global bestMove
+    global cutOff
+    return
+
 def minimax():
     global white
     global black
@@ -140,27 +163,26 @@ def minimax():
     maxScore = float("-inf")
     depthLimit = 1
     curScore = 0
+    stopTime = time.time()+(TIME_LIMIT+50)/len(validMoves)
 
     if(DEBUG):
         print("Printing Valid Moves Obtained: ")
         print(validMoves)
     for move in validMoves:
-        stopTime = time.time() + 10/len(validMoves)
         addMoveToBoard(move[0], move[1], True)
-
         while (1):
             curTime = time.time()
             if (curTime >= stopTime):
                 print("BREAK!")
                 break
             if (DEBUG): print("depthLimit", str(depthLimit))
-
+            #Depth Limit Search here
             maxVal = getMaxValue(float("-inf"), float("inf"), depthLimit, curTime, stopTime-curTime)
-
             if (not cutOff):
                 curScore = maxVal
             if (curScore >= WIN_SCORE_CUTOFF):
-                return curScore
+                bestMove = move
+                return
             depthLimit += 1
         cutOff = False
 
@@ -183,18 +205,16 @@ def getValidMoves():
     global white
     global black
     whitePotentialMoves = white.getPotentialMoves()
-    whiteMovesMade = white.getMovesMade()
     blackPotentialMoves = black.getPotentialMoves()
-    blackMovesMade = black.getMovesMade()
-    y = ((whitePotentialMoves | blackPotentialMoves) - (whiteMovesMade|blackMovesMade))
-    return y
+    return (whitePotentialMoves | blackPotentialMoves) 
+    
 
 def getMaxValue(alpha, beta, depth, curTime, timeLimit):
     global cutOff
     eval = white.getScore()-black.getScore()
     if (time.time()-curTime >= timeLimit):
         cutOff = True
-    if (eval >= WIN_SCORE_CUTOFF or cutOff or depth == 1):
+    if (not validMoves or eval >= WIN_SCORE_CUTOFF or cutOff or depth == 0):
         if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
         return eval
     else:
@@ -215,7 +235,7 @@ def getMinValue(alpha, beta, depth, curTime, timeLimit):
     eval = white.getScore() - black.getScore()
     if (time.time() - curTime >= timeLimit):
         cutOff = True
-    if (eval >= WIN_SCORE_CUTOFF or cutOff or depth == 1):
+    if (not validMoves or eval >= WIN_SCORE_CUTOFF or cutOff or depth == 0):
         if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
         return eval
     else:

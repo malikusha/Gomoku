@@ -8,7 +8,7 @@ import os
 def callReferee(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):
     subprocess.call(['python.exe', 'referee.py', teamName1, teamName2])
 def callAgent():
-    subprocess.call(['python.exe', 'agent.py'])
+    subprocess.call(['python.exe', 'agentNew.py'])
 def callAgent2():
     subprocess.call(['python.exe', 'dummyAgent.py'])
 def removeFiles(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):
