@@ -103,7 +103,6 @@ def addMoveToBoard(i, j, ourMove):
             board[i, j] = 1
             white.addMove((i, j))
             black.addEnemyMove((i,j))
-            print("how often is this actually done?")
         except Exception as e:
             print("Bhon lied its still going out of bounds" + str(i) + " " + str(j))
             print(e)
@@ -125,11 +124,13 @@ def removeMoveFromBoard(i, j, ourMove):
 
 def makeMove():
     global bestMove
+    global white
     minimax2()
     addMoveToBoard(bestMove[0], bestMove[1], True)
     f = open("move_file", 'w')
     f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
     f.close()
+    print(white.history)
 
 
 """
@@ -153,6 +154,7 @@ def minimax2():
         if(curScore > maxScore):
             maxScore = curScore
             bestMove = move
+            print("Cur best move: " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
         removeMoveFromBoard(move[0], move[1], True)
     return
 

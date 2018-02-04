@@ -1,7 +1,8 @@
 import copy
 
 DEBUG = True
-
+COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 """
 Contains a collection of in a row objects, and basically maintains a model for the
 board.
@@ -117,6 +118,10 @@ class GomokuCollection:
         #delete any merged creations
         
     def getPotentialMoves(self):
+        x = []
+        for e in self.dictionary.keys():
+            x += [COLUMNS[e[1]] + " " + str(e[0]+1)]
+        print("All potential moves: " + str(x))
         return set(self.dictionary.keys())
     
         

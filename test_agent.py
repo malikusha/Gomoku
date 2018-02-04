@@ -1,6 +1,6 @@
 import os, math, time, threading, random
 import numpy as np
-import boardlib as boardlib
+import theNewBoardLib as boardlib
 
 """ TODO
 FOR boardlib
@@ -26,6 +26,7 @@ black = boardlib.GomokuCollection()
 firstPlayer = True
 playerMoves = []
 enemyMoves = []
+firstMove = True
 
 validMoves = []  # Holds a list of all valid moves in the vicinity
 bestMove = None
@@ -88,12 +89,14 @@ def addMoveToBoard(i, j, ourMove):
         try:
             board[i, j] = -1
             black.addNewMove((i, j))
+            white.addEnemyMove((i,j))
         except:
             print("Bhon lied its still going out of bounds " + str(i) + " " + str(j))
     else:
         try:
             board[i, j] = 1
             white.addNewMove((i, j))
+            black.addEnemyMove((i,j))
         except:
             print("Bhon lied its still going out of bounds" + str(i) + " " + str(j))
     if not DEBUG: print(board)
@@ -104,16 +107,14 @@ def removeMoveFromBoard(i, j, ourMove):
     global black
     global board
 
-    if (not ourMove):
-        black.undoMove()
-    else:
-        white.undoMove()
+    black.undoMove()
+    white.undoMove()
     board[i, j] = 0
     return
 
 def makeMove():
     global bestMove
-    minimax()
+    minimax2()
     if (DEBUG):
         print("Best Move")
         print(bestMove)
@@ -121,6 +122,24 @@ def makeMove():
     f = open("move_file", 'w')
     f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
     f.close()
+
+
+def minimax2():
+    global white
+    global black
+    global bestMove
+    global cutOff
+    validMoves = getValidMoves()
+    maxScore = -1<<31
+    for move in validMoves:
+        addMoveToBoard(move[0], move[1], True)
+        curScore = white.getScore()-black.getScore()
+        print("Score: " + str(curScore))
+        if(curScore > maxScore):
+            maxScore = curScore
+            bestMove = move
+        removeMoveFromBoard(move[0], move[1], True)
+    return
 
 
 """
@@ -181,11 +200,8 @@ def getValidMoves():
     global white
     global black
     whitePotentialMoves = white.getPotentialMoves()
-    whiteMovesMade = white.getMovesMade()
     blackPotentialMoves = black.getPotentialMoves()
-    blackMovesMade = black.getMovesMade()
-    y = ((whitePotentialMoves | blackPotentialMoves) - (whiteMovesMade|blackMovesMade))
-    return y
+    return (whitePotentialMoves | blackPotentialMoves) 
 
 def getMaxValue(alpha, beta, depth, curTime, timeLimit):
     global cutOff
@@ -230,6 +246,20 @@ def getMinValue(alpha, beta, depth, curTime, timeLimit):
                 return value
             beta = min(beta, value)
     return value
+#### FUNCTIONS FOR DEBUGGING PURPOSES #####
+def getBestMove():
+    global bestMove
+    print("Best Move: " + bestMove)
+def getHistory(team):
+    if(team == 'w'):
+        global white
+        return white.history
+    elif(team == 'b'):
+        global black
+        return black.history
+    else:
+        raise Exception("Go to MacDonalds pls")
+
 
 returns = init()
 
