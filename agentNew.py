@@ -125,8 +125,6 @@ def removeMoveFromBoard(i, j, ourMove):
 
 def makeMove():
     global bestMove
-    global white
-    global black
     minimax2()
     addMoveToBoard(bestMove[0], bestMove[1], True)
     f = open("move_file", 'w')
@@ -167,43 +165,46 @@ def minimax():
     maxScore = float("-inf")
     depthLimit = 1
     curScore = 0
-    stopTime = time.time()+(TIME_LIMIT+50)/len(validMoves)
 
     if(DEBUG):
         print("Printing Valid Moves Obtained: ")
         print(validMoves)
     for move in validMoves:
+        stopTime = time.time() + (TIME_LIMIT-2)/len(validMoves)
+        if (DEBUG):
+            print("should go to next node at ", str(stopTime))
+            print("given this many seconds ", str(stopTime-time.time()))
         addMoveToBoard(move[0], move[1], True)
         while (1):
             curTime = time.time()
             if (curTime >= stopTime):
-                print("BREAK!")
+                if (DEBUG): print("BREAK! ", curTime, stopTime)
                 break
-            if (DEBUG): print("depthLimit", str(depthLimit))
-            #Depth Limit Search here
+            if (DEBUG): print("depthLimit: ", str(depthLimit))
+            if (DEBUG): print("time limit: ", str(stopTime-curTime))
             maxVal = getMaxValue(float("-inf"), float("inf"), depthLimit, curTime, stopTime-curTime)
+            depthLimit += 1
+            if (DEBUG): print("currentMax: ", str(maxVal))
+
             if (not cutOff):
                 curScore = maxVal
+                if (DEBUG): print("not cutoff")
             if (curScore >= WIN_SCORE_CUTOFF):
+                maxScore = curScore
                 bestMove = move
+                removeMoveFromBoard(move[0], move[1], True)
                 return
-            depthLimit += 1
+
         cutOff = False
+        depthLimit = 1
 
         if(maxScore < curScore):
-            if(DEBUG): print(move)
+            if(DEBUG): print("current move ", str(move))
             maxScore=curScore
             bestMove = move
-            if DEBUG: print("Best Move: " + str(bestMove))
+            if DEBUG: print("Best Move so far: " + str(bestMove))
         removeMoveFromBoard(move[0], move[1], True)
 
-    if(DEBUG):
-        print("Best Move: " + str(bestMove))
-        print("Best Score: " + str(maxScore))
-        print("White")
-        white.debugPrint()
-        print("Black")
-        black.debugPrint()
 
 def getValidMoves():
     global white
@@ -215,11 +216,12 @@ def getValidMoves():
 
 def getMaxValue(alpha, beta, depth, curTime, timeLimit):
     global cutOff
+    if (DEBUG): print("Max")
     eval = white.getScore()-black.getScore()
     if (time.time()-curTime >= timeLimit):
         cutOff = True
-    if (not validMoves or eval >= WIN_SCORE_CUTOFF or cutOff or depth == 0):
-        if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
+    if (eval >= WIN_SCORE_CUTOFF or cutOff or depth == 1):
+        # if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
         return eval
     else:
         value = float("-inf")
@@ -235,12 +237,13 @@ def getMaxValue(alpha, beta, depth, curTime, timeLimit):
     return value
 
 def getMinValue(alpha, beta, depth, curTime, timeLimit):
+    if (DEBUG): print("Min")
     global cutOff
     eval = white.getScore() - black.getScore()
     if (time.time() - curTime >= timeLimit):
         cutOff = True
-    if (not validMoves or eval >= WIN_SCORE_CUTOFF or cutOff or depth == 0):
-        if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
+    if (eval >= WIN_SCORE_CUTOFF or cutOff or depth == 1):
+        # if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
         return eval
     else:
         value = float("inf")
@@ -254,7 +257,6 @@ def getMinValue(alpha, beta, depth, curTime, timeLimit):
                 return value
             beta = min(beta, value)
     return value
-
 
 #### FUNCTIONS FOR DEBUGGING PURPOSES #####
 def getBestMove():
