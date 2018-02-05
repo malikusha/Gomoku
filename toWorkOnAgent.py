@@ -157,9 +157,9 @@ def iterativeDeepening():
     #for i in range(1,depth+1):
     #    bestMove = minimaxTry(i)
     #    print("depth achieved: " + str(i))
-    minimaxTry(2)
+    minimax()
 
-def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
+def alphaBeta(depth, alpha, beta, isMaxPlayer, curTime, timeLimit):
     global white
     global black
     validMoves = getValidMoves()
@@ -170,7 +170,7 @@ def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
         maxScore = -1<<31
         for move in validMoves:
             addMoveToBoard(move[0], move[1], True)
-            maxScore = max(maxScore, alphaBeta(depth-1,alpha, beta, False))
+            maxScore = max(maxScore, alphaBeta(depth-1,alpha, beta, False,curTime, timeLimit))
             #print(maxScore)
             alpha = max(alpha, maxScore)
             removeMoveFromBoard(move[0], move[1], True)
@@ -184,7 +184,7 @@ def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
         for move in validMoves:
             addMoveToBoard(move[0], move[1], False)
             #print("Cur move Min: " + COLUMNS[move[1]] + " " + str(move[0]+1))
-            minScore = min(minScore, alphaBeta(depth-1,alpha, beta, True))
+            minScore = min(minScore, alphaBeta(depth-1,alpha, beta, True, curTime, timeLimit))
             #print(minScore)
             beta = min(beta, minScore)
             removeMoveFromBoard(move[0], move[1], False)
@@ -192,6 +192,7 @@ def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
             if(beta <= alpha):
                 break;
         return minScore
+
 """
    A B C D E F G H I J K L M N O
  1 - - - - - - - - - - - - - - -
@@ -212,31 +213,47 @@ def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
 Why was K5 not play at depth = 2? fter placing K5, creating a free 4, if the opponent plays G9
 the evaluation drops since it now interprets the position as a close 4. Though 
 """
-def minimaxTry(depth = 1):
+def minimax():
     global white
     global black
     global bestMove
     global cutOff
-    allValidMoves = getValidMoves()
+    validMoves = getValidMoves()
+    lenValidMoves = len(validMoves)
     #x = []
     maxScore = -1<<31
-    #print(allValidMoves)
-    #print white.printBoard()
-    for move in allValidMoves:
+    depth = 1
+    print("asdfasdfasdfadsfasfdasdf")
+    for move in validMoves:
+        print("inside the loopasdfasdfasdf")
+        depth = 1
         addMoveToBoard(move[0], move[1], True)
         #curScore = white.getScore()-black.getScore()
         #print("Cur move MM: " + COLUMNS[move[1]] + " " + str(move[0]+1))
         # print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
         #   for row in white.board]))
-        curScore = alphaBeta(depth,alpha = -1<<31, beta = 1<<31, isMaxPlayer = False)
-        #print(curScore)
-
-        if(curScore > maxScore):
-            maxScore = curScore
-            bestMove = move
-            #print("Best Move Updated: " + COLUMNS[move[1]] + " " + str(move[0]+1))
-        removeMoveFromBoard(move[0], move[1], True)
-    return bestMove
+        stopTime = time.time() + (TIME_LIMIT - 1)/lenValidMoves
+        while(1):
+            curTime = time.time()
+            if (curTime >= stopTime):
+                break
+            curScore = alphaBeta(depth,-1<<31, 1<<31, False, curTime, stopTime-curTime)
+            depth = depth + 1
+            #print(curScore)
+            if(cutOff):
+                break
+            if(curScore >= WIN_SCORE_CUTOFF):
+                print("move: ")
+                bestMove = move
+                return
+            if(curScore > maxScore):
+                print("masdfadf")
+                maxScore = curScore
+                bestMove = move
+                #print("Best Move Updated: " + COLUMNS[move[1]] + " " + str(move[0]+1))
+            removeMoveFromBoard(move[0], move[1], True)
+            break
+    return 
 
 def getMin(depth = 3, alpha = -1<<31, beta = 1<<31):
     global white
@@ -262,7 +279,7 @@ def getMin(depth = 3, alpha = -1<<31, beta = 1<<31):
             if(beta <= alpha):
                 break;
         return minScore
-            
+        
 def getMax(depth, alpha, beta):
     global white
     global black
@@ -287,7 +304,7 @@ def getMax(depth, alpha, beta):
             if(beta <= alpha):
                 break;
         return maxScore
-
+"""
 
 def minimax2():
     global white
@@ -365,7 +382,7 @@ def minimax():
 
         removeMoveFromBoard(move[0], move[1], True)
 
-
+"""
 def getValidMoves():
     global white
     #global black
