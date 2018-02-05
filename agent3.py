@@ -7,7 +7,9 @@ FOR boardlib
 """
 
 # Constants - Variables that won't change
+
 TEAM_NAME = "minimax-alpha-beta"  # minimax with alpha-beta pruning with depth 3, can be changed
+>>>>>>> 92f20f9c1894fcf6404dc610a926ee6e9da01656
 COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
            'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 TIME_LIMIT = 10  # Seconds
@@ -153,13 +155,14 @@ def minimax():
     validMoves = getValidMoves()
     maxScore = float("-inf")
 
+
     if (DEBUG):
         print("Printing Valid Moves Obtained: ")
         print(validMoves)
     for move in validMoves:
         addMoveToBoard(move[0], move[1], True)
-        curMax = getMaxValue(float("-inf"), float("inf"), 3)
 
+        curMax = getMaxValue(float("-inf"), float("inf"), 3)
         if (maxScore < curMax):
             maxScore = curMax
             bestMove = move
@@ -176,10 +179,10 @@ def getValidMoves():
     return (whitePotentialMoves | blackPotentialMoves)
 
 
+
 def getMaxValue(alpha, beta, depth):
     global cutOff
     eval = white.getScore() - black.getScore()
-
     if (eval >= WIN_SCORE_CUTOFF or depth == 1):
         # if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
         return eval
@@ -206,6 +209,7 @@ def getMinValue(alpha, beta, depth):
     else:
         value = float("inf")
         for move in getValidMoves():
+
             addMoveToBoard(move[0], move[1], True)
             child = getMaxValue(alpha, beta, depth - 1)
             value = min(value, child)
