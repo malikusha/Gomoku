@@ -178,7 +178,6 @@ def getValidMoves():
 
 def getMaxValue(alpha, beta, depth):
     global cutOff
-    if (DEBUG): print("Max")
     eval = white.getScore() - black.getScore()
 
     if (eval >= WIN_SCORE_CUTOFF or depth == 1):
@@ -192,14 +191,13 @@ def getMaxValue(alpha, beta, depth):
             value = max(value, child)
             removeMoveFromBoard(move[0], move[1], False)
             if (value >= beta):
-                if DEBUG: print("Prune: " + str(value))
+                # if DEBUG: print("Prune: " + str(value))
                 return value
             alpha = max(alpha, value)
     return value
 
 
 def getMinValue(alpha, beta, depth):
-    if (DEBUG): print("Min")
     global cutOff
     eval = white.getScore() - black.getScore()
     if (abs(eval) >= WIN_SCORE_CUTOFF or depth == 1):
@@ -213,7 +211,7 @@ def getMinValue(alpha, beta, depth):
             value = min(value, child)
             removeMoveFromBoard(move[0], move[1], True)
             if (value <= alpha):
-                if DEBUG: print("Prune: " + str(value))
+                # if DEBUG: print("Prune: " + str(value))
                 return value
             beta = min(beta, value)
     return value

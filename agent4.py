@@ -160,7 +160,7 @@ def minimax():
         print(validMoves)
     for move in validMoves:
         addMoveToBoard(move[0], move[1], True)
-        stopTime = time.time() + (TIME_LIMIT - 1) / len(validMoves)
+        stopTime = time.time() + (TIME_LIMIT + 5) / len(validMoves)
 
         while(1):
             curTime = time.time()
@@ -200,7 +200,6 @@ def getValidMoves():
 
 def getMaxValue(alpha, beta, depth, curTime, timeLimit):
     global cutOff
-    if (DEBUG): print("Max")
     if (time.time()-curTime >= timeLimit):
         cutOff = True
     eval = white.getScore() - black.getScore()
@@ -224,7 +223,6 @@ def getMaxValue(alpha, beta, depth, curTime, timeLimit):
 
 
 def getMinValue(alpha, beta, depth, curTime, timeLimit):
-    if (DEBUG): print("Min")
     global cutOff
     if (time.time()-curTime >= timeLimit):
         cutOff = True
