@@ -242,7 +242,7 @@ def getMin(depth = 3, alpha = -1<<31, beta = 1<<31):
     global white
     global black
     levelScore = white.getScore()-black.getScore()
-    if(abs(levelScore) > WIN_SCORE_CUTOFF):
+    if(abs(levelScore) >= WIN_SCORE_CUTOFF):
         return levelScore
     elif(depth==1):
         return levelScore
@@ -267,7 +267,7 @@ def getMax(depth, alpha, beta):
     global white
     global black
     levelScore = white.getScore()-black.getScore()
-    if(abs(levelScore) > WIN_SCORE_CUTOFF):
+    if(abs(levelScore) >= WIN_SCORE_CUTOFF):
         return levelScore
     elif(depth==1):
         return levelScore
