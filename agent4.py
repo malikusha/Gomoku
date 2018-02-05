@@ -160,7 +160,7 @@ def minimax():
         print(validMoves)
     for move in validMoves:
         addMoveToBoard(move[0], move[1], True)
-        stopTime = time.time() + (TIME_LIMIT - 7) / len(validMoves)
+        stopTime = time.time() + (TIME_LIMIT - 1) / len(validMoves)
 
         while(1):
             curTime = time.time()
@@ -175,6 +175,8 @@ def minimax():
                 maxScore = val
                 removeMoveFromBoard(move[0], move[1], True)
                 return
+            if (cutOff):
+                break
             if (not cutOff):
                 curMax = val
 
@@ -208,6 +210,8 @@ def getMaxValue(alpha, beta, depth, curTime, timeLimit):
     else:
         value = float("-inf")
         for move in getValidMoves():
+            if (cutOff):
+                return value
             addMoveToBoard(move[0], move[1], False)
             child = getMinValue(alpha, beta, depth - 1, curTime, timeLimit)
             value = max(value, child)
@@ -224,13 +228,15 @@ def getMinValue(alpha, beta, depth, curTime, timeLimit):
     global cutOff
     if (time.time()-curTime >= timeLimit):
         cutOff = True
-    eval = white.getScore() - black.getScore()
+    eval = black.getScore() - white.getScore()
     if (abs(eval) >= WIN_SCORE_CUTOFF or depth == 1):
         # if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
         return eval
     else:
         value = float("inf")
         for move in getValidMoves():
+            if (cutOff):
+                return value
             addMoveToBoard(move[0], move[1], True)
             child = getMaxValue(alpha, beta, depth - 1, curTime, timeLimit)
             value = min(value, child)
