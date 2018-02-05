@@ -26,27 +26,34 @@ playerMoves = []
 enemyMoves = []
 firstMove = True
 
+
 validMoves = []  # Holds a list of all valid moves in the vicinity
 bestMove = None
 bestValue = float("-inf")
 cutOff = False
 
 board = np.zeros((BOARD_SIZE, BOARD_SIZE), dtype=int)
+def interruptWriteToFile():
+    print("Interrupt Called")
+    writeToFile()
+t = None
 
 def init():
     global firstPlayer
     global bestValue
+    global t
     # The Player stops playing once the game has ended
     while "end_game" not in os.listdir("."):
-
         # The player moves only if "Large_Horse.go" file appears in directory
         if TEAM_NAME+".go" in os.listdir("."):
-            time.sleep(0.5)
+            t = threading.Timer(90.0, interruptWriteToFile)
+            
+            time.sleep(0.1)
             # Check move_file to read the current moves
             move_file = open("move_file", 'r')
             move = move_file.read()
             move_file.close()
-            time.sleep(1)
+            time.sleep(0.1)
             # On first turn, need to denote whether player is playing first in start of game or not
             if not move:
                 # There are no previous moves, therefore player is playing first in the game
@@ -67,9 +74,9 @@ def init():
                 # Player is not starting player in beginning of game
                 # Because there will always be a move in other turns,
                 # this statement will always be true after the first play
-
+    
                 firstPlayer = False # Plays after other enemy player
-
+                #t.start()
                 # Obtain row and column of enemy player move
                 row = int(move.split()[2]) - 1
                 col = COLUMNS.index(move.split()[1].upper())
@@ -78,6 +85,7 @@ def init():
                 addMoveToBoard(row, col, False)  # add enemy move to board
                 # Obtain the enemy player move, update move to internal board, and make a move and write to file
                 makeMove()
+                t.cancel()
 
 
     return
@@ -91,7 +99,6 @@ def addMoveToBoard(i, j, ourMove):
             board[i, j] = -1
             black.addMove((i,j))
             white.addEnemyMove((i,j))
-            black.addMove((i, j))
             
         except Exception as e:
             #white.debugPrintDictionary()
@@ -118,6 +125,7 @@ def removeMoveFromBoard(i, j, ourMove):
     global white
     global black
     global board
+    #print("Cur move Min: " + COLUMNS[j] + " " + str(i+1))
 
     black.undoMove()
     white.undoMove()
@@ -125,21 +133,160 @@ def removeMoveFromBoard(i, j, ourMove):
     return
 
 def makeMove():
+    iterativeDeepening()
+    writeToFile()
+
+def writeToFile():
     global bestMove
-    global white
-    minimax()
+    global t
+    t.cancel()
     addMoveToBoard(bestMove[0], bestMove[1], True)
     f = open("move_file", 'w')
     f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
     f.close()
-    #print(white.history)
-
+    init()
 
 """
 opponent's move: d5 
 valid moves: e5, c5, d4, d6, e4, e6, c4, c6
 scans all of them, pick any move
 """
+
+def iterativeDeepening():
+    #depth = 3
+    #for i in range(1,depth+1):
+    #    bestMove = minimaxTry(i)
+    #    print("depth achieved: " + str(i))
+    minimaxTry(2)
+
+def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
+    global white
+    global black
+    validMoves = getValidMoves()
+    levelScore = white.getScore()-black.getScore()
+    if(depth == 1 or (abs(levelScore)>WIN_SCORE_CUTOFF)):
+        return levelScore
+    if(isMaxPlayer):
+        maxScore = -1<<31
+        for move in validMoves:
+            addMoveToBoard(move[0], move[1], True)
+            maxScore = max(maxScore, alphaBeta(depth-1,alpha, beta, False))
+            #print(maxScore)
+            alpha = max(alpha, maxScore)
+            removeMoveFromBoard(move[0], move[1], True)
+            if(beta <= alpha):
+                break;
+        return maxScore
+    else:
+        minScore = 1 <<31
+        #print(validMoves)
+
+        for move in validMoves:
+            addMoveToBoard(move[0], move[1], False)
+            #print("Cur move Min: " + COLUMNS[move[1]] + " " + str(move[0]+1))
+            minScore = min(minScore, alphaBeta(depth-1,alpha, beta, True))
+            #print(minScore)
+            beta = min(beta, minScore)
+            removeMoveFromBoard(move[0], move[1], False)
+            #print(minScore)
+            if(beta <= alpha):
+                break;
+        return minScore
+"""
+   A B C D E F G H I J K L M N O
+ 1 - - - - - - - - - - - - - - -
+ 2 - - - - - - - - - - - - - - -
+ 3 - - - - - - - - - - - - - - -
+ 4 - - - - - - - - - - - - - - -
+ 5 - - - - - O - - O - - - - - -
+ 6 - - - - - - O O X X - - - - -
+ 7 - - - - - - - O X - - - - - -
+ 8 - - - - - - - X X - - - - - -
+ 9 - - - - - - - - - - - - - - -
+10 - - - - - - - - - - - - - - -
+11 - - - - - - - - - - - - - - -
+12 - - - - - - - - - - - - - - -
+13 - - - - - - - - - - - - - - -
+14 - - - - - - - - - - - - - - -
+15 - - - - - - - - - - - - - - -
+Why was K5 not play at depth = 2? fter placing K5, creating a free 4, if the opponent plays G9
+the evaluation drops since it now interprets the position as a close 4. Though 
+"""
+def minimaxTry(depth = 1):
+    global white
+    global black
+    global bestMove
+    global cutOff
+    allValidMoves = getValidMoves()
+    #x = []
+    maxScore = -1<<31
+    #print(allValidMoves)
+    #print white.printBoard()
+    for move in allValidMoves:
+        addMoveToBoard(move[0], move[1], True)
+        #curScore = white.getScore()-black.getScore()
+        #print("Cur move MM: " + COLUMNS[move[1]] + " " + str(move[0]+1))
+        # print('\n'.join([''.join(['{:4}'.format(item) for item in row]) 
+        #   for row in white.board]))
+        curScore = alphaBeta(depth,alpha = -1<<31, beta = 1<<31, isMaxPlayer = False)
+        #print(curScore)
+
+        if(curScore > maxScore):
+            maxScore = curScore
+            bestMove = move
+            #print("Best Move Updated: " + COLUMNS[move[1]] + " " + str(move[0]+1))
+        removeMoveFromBoard(move[0], move[1], True)
+    return bestMove
+
+def getMin(depth = 3, alpha = -1<<31, beta = 1<<31):
+    global white
+    global black
+    levelScore = white.getScore()-black.getScore()
+    if(abs(levelScore) > WIN_SCORE_CUTOFF):
+        return levelScore
+    elif(depth==1):
+        return levelScore
+    else:
+        minScore = 1<<31
+        validMoves = getValidMoves()
+        #print(validMoves)
+        for move in validMoves:
+            #print("Cur move Min: " + COLUMNS[move[1]] + " " + str(move[0]+1))
+
+            addMoveToBoard(move[0], move[1], False)
+            curScore = getMax(depth-1, alpha, beta)
+            #print(curScore)
+            if(curScore < minScore): minScore = curScore
+            beta = min(alpha, minScore)
+            removeMoveFromBoard(move[0], move[1], False)
+            if(beta <= alpha):
+                break;
+        return minScore
+            
+def getMax(depth, alpha, beta):
+    global white
+    global black
+    levelScore = white.getScore()-black.getScore()
+    if(abs(levelScore) > WIN_SCORE_CUTOFF):
+        return levelScore
+    elif(depth==1):
+        return levelScore
+    else:
+        maxScore = -1<<31
+        validMoves = getValidMoves()
+        for move in validMoves:
+            #print("Cur move max: " + COLUMNS[move[1]] + " " + str(move[0]+1))
+            addMoveToBoard(move[0], move[1], True)
+            #curScore = white.getScore()-black.getScore()
+            curScore = getMin(depth-1, alpha, beta)
+            #print(curScore)
+            #print("Score: " + str(curScore))
+            removeMoveFromBoard(move[0], move[1], True)
+            if(curScore > maxScore): maxScore = curScore
+            alpha = max(alpha, maxScore)
+            if(beta <= alpha):
+                break;
+        return maxScore
 
 
 def minimax2():
@@ -221,10 +368,11 @@ def minimax():
 
 def getValidMoves():
     global white
-    global black
-    whitePotentialMoves = white.getPotentialMoves()
-    blackPotentialMoves = black.getPotentialMoves()
-    return (whitePotentialMoves | blackPotentialMoves)
+    #global black
+    #whitePotentialMoves = white.getPotentialMoves()
+    #blackPotentialMoves = black.getPotentialMoves()
+    #return (whitePotentialMoves | blackPotentialMoves)
+    return white.getPotentialMoves()
     
 
 def getMaxValue(alpha, beta, depth, curTime, timeLimit):
@@ -260,6 +408,7 @@ def getMinValue(alpha, beta, depth, curTime, timeLimit):
         return eval
     else:
         value = float("inf")
+        
         for move in getValidMoves():
             addMoveToBoard(move[0], move[1], False)
             child = getMaxValue(alpha, beta, depth - 1, curTime, timeLimit)
@@ -284,6 +433,9 @@ def getHistory(team):
         return black.history
     else:
         raise Exception("Go to MacDonalds pls")
+def algebraToMove(move):
+    row = int(move.split()[1]) - 1
+    col = COLUMNS.index(move.split()[0].upper())
 
 returns = init()
 
