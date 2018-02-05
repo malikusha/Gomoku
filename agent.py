@@ -2,8 +2,8 @@ import os, math, time, threading, random
 import numpy as np
 import gomokuCollection as boardlib
 
-""" TODO
-FOR boardlib
+""" 
+Doesnt work, the Iterative Deepening is in agent4.py with no bugs, but slow af
 """
 
 # Constants - Variables that won't change
@@ -99,7 +99,12 @@ def addMoveToBoard(i, j, ourMove):
             board[i, j] = -1
             black.addMove((i,j))
             white.addEnemyMove((i,j))
+<<<<<<< HEAD
             
+=======
+            # black.addMove((i, j))
+
+>>>>>>> 92f20f9c1894fcf6404dc610a926ee6e9da01656
         except Exception as e:
             #white.debugPrintDictionary()
             #print(white.history)
@@ -111,7 +116,7 @@ def addMoveToBoard(i, j, ourMove):
             board[i, j] = 1
             white.addMove((i,j))
             black.addEnemyMove((i,j))
-            
+
         except Exception as e:
             #print("Bhon lied its still going out of bounds" + str(i) + " " + str(j))
             #print(e)
@@ -321,10 +326,9 @@ def minimax():
         print("Printing Valid Moves Obtained: ")
         print(validMoves)
     for move in validMoves:
-        stopTime = time.time() + (TIME_LIMIT-4)/len(validMoves)
+        stopTime = time.time() + (TIME_LIMIT-5)/len(validMoves)
         if (DEBUG):
             print("should go to next node at ", str(stopTime))
-            print("given this many seconds ", str(stopTime-time.time()))
         addMoveToBoard(move[0], move[1], True)
         while (1):
             curTime = time.time()
@@ -337,15 +341,14 @@ def minimax():
             depthLimit += 1
             if (DEBUG): print("currentMax: ", str(maxVal))
 
-            if (curScore >= WIN_SCORE_CUTOFF):
-                maxScore = curScore
+            if (maxVal >= WIN_SCORE_CUTOFF):
+                maxScore = maxVal
                 bestMove = move
                 removeMoveFromBoard(move[0], move[1], True)
                 return
 
-            if (not cutOff and maxVal>curScore):
+            if (not cutOff):
                 curScore = maxVal
-                bestMove = move
                 if (DEBUG): print("not cutoff")
 
 
@@ -368,12 +371,20 @@ def minimax():
 
 def getValidMoves():
     global white
+<<<<<<< HEAD
     #global black
     #whitePotentialMoves = white.getPotentialMoves()
     #blackPotentialMoves = black.getPotentialMoves()
     #return (whitePotentialMoves | blackPotentialMoves)
     return white.getPotentialMoves()
     
+=======
+    global black
+    whitePotentialMoves = white.getPotentialMoves()
+    blackPotentialMoves = black.getPotentialMoves()
+    return (whitePotentialMoves | blackPotentialMoves)
+
+>>>>>>> 92f20f9c1894fcf6404dc610a926ee6e9da01656
 
 def getMaxValue(alpha, beta, depth, curTime, timeLimit):
     global cutOff
@@ -387,10 +398,10 @@ def getMaxValue(alpha, beta, depth, curTime, timeLimit):
     else:
         value = float("-inf")
         for move in getValidMoves():
-            addMoveToBoard(move[0], move[1], True)
+            addMoveToBoard(move[0], move[1], False)
             child = getMinValue(alpha, beta, depth - 1, curTime, timeLimit)
             value = max(value, child)
-            removeMoveFromBoard(move[0], move[1], True)
+            removeMoveFromBoard(move[0], move[1], False)
             if (value >= beta):
                 if DEBUG: print("Prune: "+str(value))
                 return value
@@ -403,17 +414,17 @@ def getMinValue(alpha, beta, depth, curTime, timeLimit):
     eval = white.getScore() - black.getScore()
     if (time.time() - curTime >= timeLimit):
         cutOff = True
-    if (eval >= WIN_SCORE_CUTOFF or cutOff or depth == 1):
+    if (abs(eval) >= WIN_SCORE_CUTOFF or cutOff or depth == 1):
         # if DEBUG: print("Val: " + str(white.getScore() - black.getScore()))
         return eval
     else:
         value = float("inf")
         
         for move in getValidMoves():
-            addMoveToBoard(move[0], move[1], False)
+            addMoveToBoard(move[0], move[1], True)
             child = getMaxValue(alpha, beta, depth - 1, curTime, timeLimit)
             value = min(value, child)
-            removeMoveFromBoard(move[0], move[1], False)
+            removeMoveFromBoard(move[0], move[1], True)
             if (value <= alpha):
                 if DEBUG: print("Prune: "+str(value))
                 return value

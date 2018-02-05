@@ -91,7 +91,7 @@ def addMoveToBoard(i, j, ourMove):
             board[i, j] = -1
             black.addMove((i,j))
             white.addEnemyMove((i,j))
-            black.addMove((i, j))
+            # black.addMove((i, j))
             
         except Exception as e:
             #white.debugPrintDictionary()
