@@ -23,7 +23,7 @@ lenso = board.GomokuCollection()
 lenso.addMove((1,1))
 lenso.addMove((2,2))
 testExpect(lenso.getScore(),2*score2)
-##
+
 leno = board.GomokuCollection()
 leno.addMove((1,1))
 leno.addMove((3,3))

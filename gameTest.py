@@ -1,8 +1,6 @@
-
 import subprocess
 from threading import Thread
 import os
-
 
 
 def callReferee(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):

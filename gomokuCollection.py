@@ -1,29 +1,24 @@
+BOARD_SIZE = 15
 COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 class GomokuCollection:
 
-    def __init__(self, length = 15, width = 15, score2=2, score3=9, score4=15, score5 = 10000000):
+    def __init__(self, length = BOARD_SIZE, width = BOARD_SIZE, score2=2, score3=9, score4=15, score5 = 10000000):
         self.board = [[0 for x in range(length)] for y in range(width)] 
         self.orderedMoves = []
         self.score = [0,0,score2,score3,score4,score5]
         self.ourMove = True
     def addMove(self, move):
-        #print(self.orderedMoves)
-       # print("Adding: " + COLUMNS[move[1]] + " " + str(move[0]+1))
         self.orderedMoves += [move]
         self.board[move[0]][move[1]] = 1
         self.ourMove = False
         
     def addEnemyMove(self, move):
-        #print(self.orderedMoves)
-        #print("Adding Enemy: " + COLUMNS[move[1]] + " " + str(move[0]+1))
         self.orderedMoves += [move]
         self.board[move[0]][move[1]] = -1
         self.ourMove = True
     def undoMove(self):
-        #print(self.orderedMoves)
         move = self.orderedMoves.pop()
-        #print("Removing: " + COLUMNS[move[1]] + " " + str(move[0]+1))
         if(self.board[move[0]][move[1]] == 1):
             self.ourMove = True
         elif(self.board[move[0]][move[1]] == -1):
@@ -34,7 +29,7 @@ class GomokuCollection:
         
 
     def outOfRange(self, move):
-        return (move[0] < 0) or (move[0] > 14) or (move[1] <0) or (move[1] > 14)
+        return (move[0] < 0) or (move[0] > BOARD_SIZE-1) or (move[1] <0) or (move[1] > BOARD_SIZE-1)
 
 
     def getPotentialMoves(self):
@@ -48,9 +43,7 @@ class GomokuCollection:
                     if(self.board[head[0]][head[1]]==0):
                         retSet.add(head)
                 if(not self.outOfRange(tail)):
-                   # print(tail)
                     if(self.board[tail[0]][tail[1]]==0):
-                       # print("was added")
                         retSet.add(tail)
         return retSet
 
@@ -93,8 +86,6 @@ class GomokuCollection:
                         tailBlock = True
                     elif(self.board[tail[0]][tail[1]]==-1):
                         tailBlock = True
-##                    print("The head tail: " + str(headTail))
-##                    print("Score: " + str(self.score[curLen]))
                     headTail = (head,tail)
                     if(headTail not in alreadyExistingHeadTails):
                         alreadyExistingHeadTails.add(headTail)
