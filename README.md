@@ -22,15 +22,31 @@ A game will consist of a sequence of the following actions:
 4. After that, *player1* and *player2* take turns making moves until the game ends with one player winning or a tie. There is a **10 second time limit** for a player to make its move.
 ___
 ## 2 Program Implementation
+The following subsections will go through and describe the different algorithms, heuristics and strategies that were implemented to run the Gomoku AI. This section will also step through the AI's offensive and defensive behavior, as well as its interaction with the referee.
 
 ***
 ### 2.1 Minimax Implementation
+The minimax implementation can be found within the *agent.py* class as a the function named *_______*. The following snippets on lines __ to __ shows the minimax implementation
+
+```python
+
+```
+
+
 
 ***
 ### 2.2 Alpha-Beta Pruning Implementation
 
+```python
+
+```
+
 ***
-### 2.3 Heuristic Evaluation Function
+### 2.3 Heuristic Evaluation Function and Strategies
+
+```python
+
+```
 
 ***
 ### 2.4 Offensive and Defensive Behavior
@@ -38,9 +54,13 @@ ___
 ***
 ### 2.5 Interaction with Referee
 
+
+### 2.6 Program Testing
+The *GomokuCollection* class is the class that controls the movement on the board and assigns evaluation scores to it. In order to proceed in using this class, it needed to be heavily tested. Using Test Driven Development (TDD), inside the *testCollection.py* class, the GomokuCollection was thouroughly examined to make sure that the code worked as expected.    
+
 ___
 ## 3 Problems Faced
-
+In this section, all the bugs that have been encountered during the process of programming the Gomoku AI are listed below as well as how they were fixed.
 ***
 ### 3.1 Bugs
 
