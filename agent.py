@@ -22,6 +22,7 @@ black = boardlib.GomokuCollection()
 
 # Variables that will change
 firstPlayer = True
+firstMove = True
 playerMoves = []
 enemyMoves = []
 firstMove = True
@@ -41,6 +42,7 @@ t = None
 def init():
     global firstPlayer
     global bestValue
+    global firstMove
     global t
     # The Player stops playing once the game has ended
     while "end_game" not in os.listdir("."):
@@ -66,6 +68,7 @@ def init():
                 if DEBUG: print("Wrote")
                 f.close()
                 addMoveToBoard(7, 7, True)
+                firstMove = False
 
             elif move.split()[0] != TEAM_NAME:
                 if(DEBUG): print("Init making a move")
@@ -80,15 +83,23 @@ def init():
                 row = int(move.split()[2]) - 1
                 col = COLUMNS.index(move.split()[1].upper())
                 if DEBUG2: print("ROW: %i, COLUMN: %i" % (row,col))
-                if (firstPlayer and board[row, col] == 1):
+                if (firstPlayer and board[row, col] == 1 and not firstMove):
                     removeMoveFromBoard(row, col, True)
-                addMoveToBoard(row, col, False)  # add enemy move to board
+                if (firstMove and col != 'A' and col != 'O' and row != 0 and row != 14):
+                    f = open("move_file", 'w')
+                    f.write(TEAM_NAME + " " + str(COLUMNS[col]) + " " + str(row+1))
+                    f.close()
+                    addMoveToBoard(row, col, True)
+                    firstPlayer = False  # Plays after other enemy player
+                    firstMove = False
+                else:
+                    addMoveToBoard(row, col, False)  # add enemy move to board
+                    firstPlayer = False  # Plays after other enemy player
+                    firstMove = False
+                    # Obtain the enemy player move, update move to internal board, and make a move and write to file
+                    makeMove()
+                    t.cancel()
 
-                firstPlayer = False  # Plays after other enemy player
-
-                # Obtain the enemy player move, update move to internal board, and make a move and write to file
-                makeMove()
-                t.cancel()
 
 
     return
