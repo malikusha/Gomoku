@@ -74,15 +74,18 @@ def init():
                 # Player is not starting player in beginning of game
                 # Because there will always be a move in other turns,
                 # this statement will always be true after the first play
-    
-                firstPlayer = False # Plays after other enemy player
+
                 #t.start()
                 # Obtain row and column of enemy player move
                 row = int(move.split()[2]) - 1
                 col = COLUMNS.index(move.split()[1].upper())
                 if DEBUG2: print("ROW: %i, COLUMN: %i" % (row,col))
-
+                if (firstPlayer and board[row, col] == 1):
+                    removeMoveFromBoard(row, col, True)
                 addMoveToBoard(row, col, False)  # add enemy move to board
+
+                firstPlayer = False  # Plays after other enemy player
+
                 # Obtain the enemy player move, update move to internal board, and make a move and write to file
                 makeMove()
                 t.cancel()
