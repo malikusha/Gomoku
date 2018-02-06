@@ -1,9 +1,8 @@
 import os
 import random
 import time
-#import scipy.io
 
-teamName = "notKnuckles"
+teamName = "random-moves"
 
 """
 Dummy AI
@@ -47,13 +46,13 @@ print("Dummy AI Initiated")
 validMoves = []
 for x in range(0,15):
     for y in range(0,15):
-        validMoves.append([x, y])
+        validMoves.append([x+1, y])
 columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O']
 
 while(1):
   while((teamName+".go" not in os.listdir("."))):
     time.sleep(1)
-    print("Nothing found")
+  print("Dummy Activated")
   init(validMoves)
   time.sleep(1)
