@@ -19,7 +19,6 @@ firstPlayer = True
 firstMove = True
 playerMoves = []
 enemyMoves = []
-firstMove = True
 bestMove = None
 bestValue = float("-inf")
 
