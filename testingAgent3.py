@@ -65,7 +65,6 @@ def init():
                 # Obtain row and column of enemy player move
                 row = int(move.split()[2]) - 1
                 col = COLUMNS.index(move.split()[1].upper())
-                if DEBUG2: print("ROW: %i, COLUMN: %i" % (row, col))
 
                 addMoveToBoard(row, col, False)  # add enemy move to board
                 # Obtain the enemy player move, update move to internal board, and make a move and write to file
