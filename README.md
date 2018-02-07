@@ -60,7 +60,7 @@ The following subsections will go through and describe the different algorithms,
 
 ***
 ### 2.1 Minimax Implementation
-The minimax implementation can be found within the *agent.py* class as a the function named *minimax*. The following snippets on lines __ to __ shows the minimax implementation
+The minimax implementation can be found within the *agent.py* class as a the function named *minimax*.
 
 ```python
 def minimax(depth = 1):
@@ -85,7 +85,7 @@ According to *geeksforgeeks.org*
 That being said, the following algorithm obtains all the valid moves on the board (which are all the open positions adjacent to the placed pieces on the board), and running the *alphaBeta* algorithm given a certain depth it obtains the most optimal move to play.
 ***
 ### 2.2 Alpha-Beta Pruning Implementation
-The alpha-beta pruning implementation can be found within the *agent.py* class as a the function named *alphaBeta*. The following snippets on lines __ to __ shows the minimax implementation
+The alpha-beta pruning implementation can be found within the *agent.py* class as a the function named *alphaBeta*.
 
 ```python
 def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
