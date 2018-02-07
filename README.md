@@ -181,13 +181,3 @@ Instead of *enemy_team*, use the TEAM_NAME of the agent that is being run. At th
 $ python agent.py
 ```
 If it doesn't run, make sure that these files are not inside the system: *move_file*, *end_file*, and any files ending in *.go*. 
-___
-## 3 Problems Faced
-In this section, all the bugs that have been encountered during the process of programming the Gomoku AI are listed below as well as how they were fixed.
-***
-### 3.1 Bugs
-
-***
-### 3.2 Fixes
-
-___
