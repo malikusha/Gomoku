@@ -4,7 +4,7 @@ ___
 #### Contributors: Bhon Bunnag, Malika Nurbekova, Yil Verdeja
 ___
 ## 1 Project Description and Goal
-This project consists of developing and implementing a computer program that plays Gomoku. Also known as "five in-a-row", is a board game similar to tic-tac-toe but on a larger board. This project will exemplify the minimax algorithm and alpha-beta pruning.
+This project consists of developing and implementing a computer program that plays Gomoku. Also known as "five in-a-row", is a board game similar to tic-tac-toe but on a larger board.
 ***
 ### 1.1 Game Description
 Gomoku is a two player game. The two players take turns putting markers on the board. One of the player uses **white** markers and the other uses **black** markers. 
