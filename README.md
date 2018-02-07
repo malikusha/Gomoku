@@ -117,11 +117,13 @@ def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
         return minScore
 ```
 The alpha-beta pruning function incorporates the minimax algorithm as it recursively calls the *alphaBeta* (i.e. itself) function changing between players (max and min) to obtain the most optimal move. It obtains an optimal move more efficiently using alpha-beta pruning by pruning branches that need not to be expanded further.
-#### Utility Function
-The variable *levelScore* obtains the score for the current state of the board by using a heuristic evaluation function in order to assign a number to any intermediate board configuration.
 ***
 ### 2.3 Heuristic Evaluation Function and Strategies
+#### Utility Function
+The variable *levelScore* obtains the score for the current state of the board by using a heuristic evaluation function in order to assign a number to any intermediate board configuration.
+
 #### Heuristic Evaluation Function
+The following code is the Evaluation Function used with *getScore* function inside the Gomoku Collection class.
 
 ```python
 def getScore(self):
@@ -152,36 +154,6 @@ def getScore(self):
                             totalScore += 2*self.score[curLen]
         return totalScore
 ```
-#### Depth Limited Search vs Iterative Deepening
-Depth-limited search with a depth of 2 was used as a heuristic strategy to avoid expanding the whole minimax tree so that a move is produced withim the time limit. The reason why we preferred using depth-limited search over iterative deepening was due to the performance. We implemented Iterative Deepening and while testing it, we realized that on average it goes as deep as 2-3 depths down when timed. However, it is performing the move much slower due to it's recalculating when going to each depth. So, using depth-limited search with a limit of 2 gives the same result, but with faster performance.
-
-```python
-def depthLimited():
-    minimax(2)
-```
-
-### 2.5 Program Testing
-#### Test Driven Development
-The *GomokuCollection* class is the class that controls the movement on the board and assigns evaluation scores to it. In order to proceed in using this class, it needed to be heavily tested. Using Test Driven Development (TDD), inside the *testCollection.py* class, the GomokuCollection was thouroughly examined to make sure that the code worked as expected.
-
-#### Testing Agent vs Agent
-The first agent was tested against an agent that made random moves on the board (filename: testingAgent1.py, team name: random-move). Once the AI could beat a testAgent1, then we moved on to it playing with smarter agents. As the program progressed, different agents were created with slight tweaks in their search algorithm or heuristics evaluation function. These agents played against each other in order to obtain the most optimal agent (Performance measure: Winning to Losing ratio). Without any time constraints, agents would play against human users. Almost all the time, the AI would beat the human. (This human is **Bhon Bunnag** who is an excellent Chess Player (President of Chess Club) and Gomoku Player).
-
-In case if you would like to test *agent.py* (our final agent that uses minimax with alpha-beta pruning and depth-limited search as its heuristic strategy) against all the previous versions we had, we included those versions into the submission folder since we tested *agent.py* against them:
-
-- *testingAgent1.py* (random-move) - Makes random moves on the board
-- *testingAgent2.py* (minimax) - minimax algorithm with no alpha-beta pruning or heuristic strategy
-- *testingAgent3.py* (minimax-alpha-beta) - minimax algorithm with alpha-beta pruning and no heuristic strategy
-- *testingAgent4.py* (ID) - Iterative Deepening heuristic strategy
-
-#### Strengths and Weaknesses
-Weakness: Since depth limiting search is used (to a depth of 2) rather than iterative deepening, this becomes a weakness for the program since it can  only look 2 moves ahead rather than five or ten.
-
-Strenghts: The strength of our AI lies in the fact that the utility score takes into account both the players move and the opponent move, thus performing both offensively and defensively.
-
-***
-### 2.6 Discussion
-#### GENERAL IDEA
 
 The utility function attempts to assign points depending on the existence of interests
 structures. The most relevant ones are the existance of N-in-a-row objects.
@@ -220,6 +192,35 @@ The scores are summed up for each team, and the final score is calculated by sub
 the points of the player team by the points of the enemy team. This allows the AI to 
 take into account both offensive and defensive moves.
 
+#### Depth Limited Search vs Iterative Deepening
+Depth-limited search with a depth of 2 was used as a heuristic strategy to avoid expanding the whole minimax tree so that a move is produced withim the time limit. The reason why we preferred using depth-limited search over iterative deepening was due to the performance. We implemented Iterative Deepening and while testing it, we realized that on average it goes as deep as 2-3 depths down when timed. However, it is performing the move much slower due to it's recalculating when going to each depth. So, using depth-limited search with a limit of 2 gives the same result, but with faster performance.
+
+```python
+def depthLimited():
+    minimax(2)
+```
+
+### 2.5 Program Testing
+#### Test Driven Development
+The *GomokuCollection* class is the class that controls the movement on the board and assigns evaluation scores to it. In order to proceed in using this class, it needed to be heavily tested. Using Test Driven Development (TDD), inside the *testCollection.py* class, the GomokuCollection was thouroughly examined to make sure that the code worked as expected.
+
+#### Testing Agent vs Agent
+The first agent was tested against an agent that made random moves on the board (filename: testingAgent1.py, team name: random-move). Once the AI could beat a testAgent1, then we moved on to it playing with smarter agents. As the program progressed, different agents were created with slight tweaks in their search algorithm or heuristics evaluation function. These agents played against each other in order to obtain the most optimal agent (Performance measure: Winning to Losing ratio). Without any time constraints, agents would play against human users. Almost all the time, the AI would beat the human. (This human is **Bhon Bunnag** who is an excellent Chess Player (President of Chess Club) and Gomoku Player).
+
+In case if you would like to test *agent.py* (our final agent that uses minimax with alpha-beta pruning and depth-limited search as its heuristic strategy) against all the previous versions we had, we included those versions into the submission folder since we tested *agent.py* against them:
+
+- *testingAgent1.py* (random-move) - Makes random moves on the board
+- *testingAgent2.py* (minimax) - minimax algorithm with no alpha-beta pruning or heuristic strategy
+- *testingAgent3.py* (minimax-alpha-beta) - minimax algorithm with alpha-beta pruning and no heuristic strategy
+- *testingAgent4.py* (ID) - Iterative Deepening heuristic strategy
+
+#### Strengths and Weaknesses
+Weakness: Since depth limiting search is used (to a depth of 2) rather than iterative deepening, this becomes a weakness for the program since it can  only look 2 moves ahead rather than five or ten.
+
+Strenghts: The strength of our AI lies in the fact that the utility score takes into account both the players move and the opponent move, thus performing both offensively and defensively.
+
+***
+### 2.6 Discussion
 #### TERMINAL CONDITION
 The terminal condition is determined when a 5-in-a-row structure is detected. A score of 
 1000000 will be assigned, which will allow the minimax algorithm to identify as the terminal
@@ -230,8 +231,6 @@ The strength of the program lies in the ability to detect positions that are 'fo
 positions that are not terminal conditions but will put us in a state that will by forced
 lead us to one. For example, an Open-4-in-a-row state, where the opponent is not able to make
 any instant win, is a forced win state. 
-
-#### DISCUSSION
 
 #### DEPTH OF 2
 Though we intended to use iterative deepening, it turns out that there were too many problems,
