@@ -45,7 +45,10 @@ def minimax(depth = 1):
         removeMoveFromBoard(move[0], move[1], True)
     return bestMove
 ```
+According to *geeksforgeeks.org*
+> Minimax is a kind of backtracking algorithm that is used in decision making and game theory to find the optimal move for a player, assuming that your opponent also plays optimally.
 
+That being said, the following algorithm obtains all the valid moves on the board (which are all the open positions adjacent to the placed pieces on the board), and running the *alphaBeta* algorithm given a certain depth it obtains the most optimal move to play.
 ***
 ### 2.2 Alpha-Beta Pruning Implementation
 The alpha-beta pruning implementation can be found within the *agent.py* class as a the function named *alphaBeta*. The following snippets on lines __ to __ shows the minimax implementation
@@ -79,9 +82,12 @@ def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
                 break;
         return minScore
 ```
+The alpha-beta pruning function incorporates the minimax algorithm as it recursively calls the *alphaBeta* (i.e. itself) function changing between players (max and min) to obtain the most optimal move. It obtains an optimal move more efficiently using alpha-beta pruning by pruning branches that need not to be expanded further.
 
+The variable *levelScore* obtains the score for the current state of the board by using a heuristic evaluation function in order to assign a number to any intermediate board configuration.
 ***
 ### 2.3 Heuristic Evaluation Function and Strategies
+#### Heuristic Evaluation Function
 
 ```python
 def getScore(self):
@@ -112,6 +118,8 @@ def getScore(self):
                             totalScore += 2*self.score[curLen]
         return totalScore
 ```
+#### Depth Limited Search vs Iterative Deepening
+Depth-limited search with a depth of 2 was used as a heuristic strategy to avoid expanding the whole minimax tree so that a move is produced withim the time limit. The reason why we preferred using depth-limited search over iterative deepening was due to the performance. We implemented Iterative Deepening and while testing it, we realized that on average it goes as deep as 2-3 depths down when timed. However, it is performing the move much slower due to it's recalculating when going to each depth. So, using depth-limited search with a limit of 2 gives the same result, but with faster performance.
 
 ```python
 def depthLimited():
@@ -127,7 +135,8 @@ def depthLimited():
 ***
 ### 2.6 Program Testing
 The *GomokuCollection* class is the class that controls the movement on the board and assigns evaluation scores to it. In order to proceed in using this class, it needed to be heavily tested. Using Test Driven Development (TDD), inside the *testCollection.py* class, the GomokuCollection was thouroughly examined to make sure that the code worked as expected.
-
+***
+### 2.7 Program Instructions on compiling and running the program
 Initially to test the program, two different agents needed to be executed with the referee. As that became a slow and painstaking effort, the *gameTest.py* class was created in order to quicken this process. This was possible by changing the attributes of the team names and the agent files. An example is the snippet below which uses two example agents with their corresponding team names.
 
 ```python
