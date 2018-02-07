@@ -136,10 +136,10 @@ The *GomokuCollection* class is the class that controls the movement on the boar
 
 #### Testing Agent vs Agent
 The first agent was tested against an agent that made random moves on the board (filename: testingAgent1.py, team name: random-move). Once the AI could beat a testAgent1, then we moved on to it playing with smarter agents. As the program progressed, different agents were created with slight tweaks in their search algorithm or heuristics evaluation function. These agents played against each other in order to obtain the most optimal agent (Performance measure: Winning to Losing ratio). Without any time constraints, agents would play against human users. Almost all the time, the AI would beat the human. (This human is **Bhon Bunnag** who is an excellent Chess Player (President of Chess Club) and Gomoku Player).
-In case if you would like to test an agent.py (our final agent that uses minimax with alpha-beta pruning and depth-limited search as its heuristic strategy) against all the previous versions we had, we included those versions into the submission folder since we tested agent.py against them:__
-testingAgent1.py (random-move) - Makes random moves on the board__
-testingAgent2.py (minimax) - minimax algorithm with no alpha-beta pruning or heuristic strategy__
-testingAgent3.py (minimax-alpha-beta) - minimax algorithm with alpha-beta pruning and no heuristic strategy__
+In case if you would like to test an agent.py (our final agent that uses minimax with alpha-beta pruning and depth-limited search as its heuristic strategy) against all the previous versions we had, we included those versions into the submission folder since we tested agent.py against them: <br />
+testingAgent1.py (random-move) - Makes random moves on the board <br />
+testingAgent2.py (minimax) - minimax algorithm with no alpha-beta pruning or heuristic strategy <br />
+testingAgent3.py (minimax-alpha-beta) - minimax algorithm with alpha-beta pruning and no heuristic strategy <br />
 testingAgent4.py (ID) - Iterative Deepening heuristic strategy
 
 #### Strengths and Weaknesses
