@@ -3,6 +3,40 @@ ___
 ## Team Name: Large_Horse
 #### Contributors: Bhon Bunnag, Malika Nurbekova, Yil Verdeja
 ___
+## Program Instructions on compiling and running the program
+Initially to test the program, two different agents needed to be executed with the referee. As that became a slow and painstaking effort, the *gameTest.py* class was created in order to quicken this process. This was possible by changing the attributes of the team names and the agent files. An example is the snippet below which uses two example agents with their corresponding team names.
+
+```python
+def callReferee(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):
+    subprocess.call(['python.exe', 'referee.py', teamName1, teamName2])
+def callAgent():
+    subprocess.call(['python.exe', 'agent.py'])
+def callAgent2():
+    subprocess.call(['python.exe', 'agent2.py'])
+def removeFiles(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):
+    listOfFiles = [teamName1 + ".go", teamName2 + ".go", "move_file",
+                   "history_file", "end_game"]
+    for e in listOfFiles:
+        try:
+            os.remove(os.path.join('./', e))
+        except:
+            print("No file named " + e)
+```
+If you don't have python installed, click on this [link](https://www.python.org/).
+Depending on the version of python, use this command to initiate the game:
+```
+$ python gameTest.py
+```
+However if *python gameTest.py* command does not run on your computer, run:
+```
+$ python referee.py Large_Horse enemy_team
+```
+Instead of *enemy_team*, use the TEAM_NAME of the agent that is being run. At the same time while running the *agent.py* and one of the testing agents files(e.g. *testingAgent2.py*):
+```
+$ python agent.py
+```
+If it doesn't run, make sure that these files are not inside the system: *move_file*, *end_file*, and any files ending in *.go*.
+___
 ## 1 Project Description and Goal
 This project consists of developing and implementing a computer program that plays Gomoku. Also known as "five in-a-row", is a board game similar to tic-tac-toe but on a larger board.
 ***
@@ -136,11 +170,13 @@ The *GomokuCollection* class is the class that controls the movement on the boar
 
 #### Testing Agent vs Agent
 The first agent was tested against an agent that made random moves on the board (filename: testingAgent1.py, team name: random-move). Once the AI could beat a testAgent1, then we moved on to it playing with smarter agents. As the program progressed, different agents were created with slight tweaks in their search algorithm or heuristics evaluation function. These agents played against each other in order to obtain the most optimal agent (Performance measure: Winning to Losing ratio). Without any time constraints, agents would play against human users. Almost all the time, the AI would beat the human. (This human is **Bhon Bunnag** who is an excellent Chess Player (President of Chess Club) and Gomoku Player).
-In case if you would like to test an agent.py (our final agent that uses minimax with alpha-beta pruning and depth-limited search as its heuristic strategy) against all the previous versions we had, we included those versions into the submission folder since we tested agent.py against them: <br />
-testingAgent1.py (random-move) - Makes random moves on the board <br />
-testingAgent2.py (minimax) - minimax algorithm with no alpha-beta pruning or heuristic strategy <br />
-testingAgent3.py (minimax-alpha-beta) - minimax algorithm with alpha-beta pruning and no heuristic strategy <br />
-testingAgent4.py (ID) - Iterative Deepening heuristic strategy
+
+In case if you would like to test *agent.py* (our final agent that uses minimax with alpha-beta pruning and depth-limited search as its heuristic strategy) against all the previous versions we had, we included those versions into the submission folder since we tested *agent.py* against them:
+
+- *testingAgent1.py* (random-move) - Makes random moves on the board
+- *testingAgent2.py* (minimax) - minimax algorithm with no alpha-beta pruning or heuristic strategy
+- *testingAgent3.py* (minimax-alpha-beta) - minimax algorithm with alpha-beta pruning and no heuristic strategy
+- *testingAgent4.py* (ID) - Iterative Deepening heuristic strategy
 
 #### Strengths and Weaknesses
 Weakness: Since depth limiting search is used (to a depth of 2) rather than iterative deepening, this becomes a weakness for the program since it can  only look 2 moves ahead rather than five or ten.
@@ -148,36 +184,4 @@ Weakness: Since depth limiting search is used (to a depth of 2) rather than iter
 Strenghts: The strength of our AI lies in the fact that the utility score takes into account both the players move and the opponent move, thus performing both offensively and defensively.
 
 ***
-### 2.6 Program Instructions on compiling and running the program
-Initially to test the program, two different agents needed to be executed with the referee. As that became a slow and painstaking effort, the *gameTest.py* class was created in order to quicken this process. This was possible by changing the attributes of the team names and the agent files. An example is the snippet below which uses two example agents with their corresponding team names.
-
-```python
-def callReferee(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):
-    subprocess.call(['python.exe', 'referee.py', teamName1, teamName2])
-def callAgent():
-    subprocess.call(['python.exe', 'agent.py'])
-def callAgent2():
-    subprocess.call(['python.exe', 'agent2.py'])
-def removeFiles(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):
-    listOfFiles = [teamName1 + ".go", teamName2 + ".go", "move_file",
-                   "history_file", "end_game"]
-    for e in listOfFiles:
-        try:
-            os.remove(os.path.join('./', e))
-        except:
-            print("No file named " + e)
-```
-If you don't have python installed, click on this [link](https://www.python.org/).
-Depending on the version of python, use this command to initiate the game:
-```
-$ python gameTest.py
-```
-However if *python gameTest.py* command does not run on your computer, run:
-```
-$ python referee.py Large_Horse enemy_team
-```
-Instead of *enemy_team*, use the TEAM_NAME of the agent that is being run. At the same time while running the *agent.py* and one of the testing agents files(e.g. *testingAgent2.py*):
-```
-$ python agent.py
-```
-If it doesn't run, make sure that these files are not inside the system: *move_file*, *end_file*, and any files ending in *.go*. 
+___
