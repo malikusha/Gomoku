@@ -117,7 +117,7 @@ def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
         return minScore
 ```
 The alpha-beta pruning function incorporates the minimax algorithm as it recursively calls the *alphaBeta* (i.e. itself) function changing between players (max and min) to obtain the most optimal move. It obtains an optimal move more efficiently using alpha-beta pruning by pruning branches that need not to be expanded further.
-
+#### Utility Function
 The variable *levelScore* obtains the score for the current state of the board by using a heuristic evaluation function in order to assign a number to any intermediate board configuration.
 ***
 ### 2.3 Heuristic Evaluation Function and Strategies
