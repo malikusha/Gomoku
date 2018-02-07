@@ -185,13 +185,16 @@ GENERAL IDEA
 
 The utility function attempts to assign points depending on the existence of interests
 structures. The most relevant ones are the existance of N-in-a-row objects.
+
  -------   -------    ----X_-    -X-----   -------
  -------   ----_X-    ---X---    --X----   -------
  ---X---   -----X-    --X----    ---X---   XXXXXX-
  -------   -------    -------    ----X--   -------
+ 
 1-in-a-row 2-in-a-row 3-in-a-row 4-in-a-row 5-in-a-row
 
 Each of these structures are assigned to be either open, closed, or dead
+
 -------   -------   -------
 ----X--   -------   ----O--
 ---X---   --OXX--   -----X-
