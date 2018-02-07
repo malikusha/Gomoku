@@ -181,26 +181,27 @@ Strenghts: The strength of our AI lies in the fact that the utility score takes 
 
 ***
 ### 2.6 Discussion
-GENERAL IDEA
+#### GENERAL IDEA
 
 The utility function attempts to assign points depending on the existence of interests
 structures. The most relevant ones are the existance of N-in-a-row objects.
-
+```
  -------   -------    ----X_-    -X-----   -------
  -------   ----_X-    ---X---    --X----   -------
  ---X---   -----X-    --X----    ---X---   XXXXXX-
  -------   -------    -------    ----X--   -------
- 
+```
 1-in-a-row 2-in-a-row 3-in-a-row 4-in-a-row 5-in-a-row
 
 Each of these structures are assigned to be either open, closed, or dead
-
+```
 -------   -------   -------
 ----X--   -------   ----O--
 ---X---   --OXX--   -----X-
 --X----   -------   ------X 
 -------   -------   -------
 Open	  Closed	Dead
+```
 
 The first example is an open structure because it can grow into a four in a row by 
 placing a piece on either end of the structure. The second one is a closed structure
@@ -219,25 +220,25 @@ The scores are summed up for each team, and the final score is calculated by sub
 the points of the player team by the points of the enemy team. This allows the AI to 
 take into account both offensive and defensive moves.
 
-TERMINAL CONDITION
+#### TERMINAL CONDITION
 The terminal condition is determined when a 5-in-a-row structure is detected. A score of 
 1000000 will be assigned, which will allow the minimax algorithm to identify as the terminal
 condition (and thus, proceed accordingly).
 
-SPECIAL CASES
+#### SPECIAL CASES
 The strength of the program lies in the ability to detect positions that are 'forced wins', 
 positions that are not terminal conditions but will put us in a state that will by forced
 lead us to one. For example, an Open-4-in-a-row state, where the opponent is not able to make
 any instant win, is a forced win state. 
 
-DISCUSSION
+#### DISCUSSION
 
-DEPTH OF 2
+#### DEPTH OF 2
 Though we intended to use iterative deepening, it turns out that there were too many problems,
 and we ended up using a minimax algorithm with depth of 2 in order to stay under the tine limit.
 Unfortunately, this limits the strength of our program
 
-FURTHER HEURISTICS FOR CUTTING DOWN
+#### FURTHER HEURISTICS FOR CUTTING DOWN
 By identifying the positions that will lead to forced wins, we can use this information to further
 prune the minimax tree, which allows us to search faster.
  
