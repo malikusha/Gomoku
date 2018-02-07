@@ -184,4 +184,9 @@ Weakness: Since depth limiting search is used (to a depth of 2) rather than iter
 Strenghts: The strength of our AI lies in the fact that the utility score takes into account both the players move and the opponent move, thus performing both offensively and defensively.
 
 ***
+### 2.6 Discussion
+A discussion of why the evaluation function and the heuristic(s) you
+picked are good choices.
+
+***
 ___
