@@ -130,13 +130,20 @@ def depthLimited():
 ### 2.4 Offensive and Defensive Behavior
 
 ***
-### 2.5 Interaction with Referee
+### 2.5 Program Testing
+#### Test Driven Development
+The *GomokuCollection* class is the class that controls the movement on the board and assigns evaluation scores to it. In order to proceed in using this class, it needed to be heavily tested. Using Test Driven Development (TDD), inside the *testCollection.py* class, the GomokuCollection was thouroughly examined to make sure that the code worked as expected.
+
+#### Testing Agent vs Agent
+The first agent was tested against an agent that made random moves on the board. Once the AI could beat a *dumb* agent, then we moved on to it playing with much smarter agents. As the program progressed, different agents were created with slight tweaks in their search algorithm or heuristics evaluation function. These agents played against each other in order to obtain the most optimal agent (Performance measure: Winning to Losing ratio). Without any time constraints, agents would play against human users. Almost all the time, the AI would beat the human. (This human is **Bhon Bunnag** who is an excellent Chess Player (President of Chess Club) and Gomoku Player).
+
+#### Strengths and Weaknesses
+Weakness: Since depth limiting search is used (to a depth of 2) rather than iterative deepening, this becomes a weakness for the program since it can  only look 2 moves ahead rather than five or ten.
+
+Strenghts: The strength of our AI lies in the fact that the utility score takes into account both the players move and the opponent move, thus performing both offensively and defensively.
 
 ***
-### 2.6 Program Testing
-The *GomokuCollection* class is the class that controls the movement on the board and assigns evaluation scores to it. In order to proceed in using this class, it needed to be heavily tested. Using Test Driven Development (TDD), inside the *testCollection.py* class, the GomokuCollection was thouroughly examined to make sure that the code worked as expected.
-***
-### 2.7 Program Instructions on compiling and running the program
+### 2.6 Program Instructions on compiling and running the program
 Initially to test the program, two different agents needed to be executed with the referee. As that became a slow and painstaking effort, the *gameTest.py* class was created in order to quicken this process. This was possible by changing the attributes of the team names and the agent files. An example is the snippet below which uses two example agents with their corresponding team names.
 
 ```python
@@ -155,6 +162,20 @@ def removeFiles(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):
         except:
             print("No file named " + e)
 ```
+If you don't have python installed, click on this [link](https://www.python.org/).
+Depending on the version of python, use this command to initiate the game:
+```
+$ python gameTest.py
+```
+However if *python gameTest.py* command does not run on your computer, run:
+```
+$ python referee.py Large_Horse enemy_team
+```
+Instead of *enemy_team*, use the TEAM_NAME of the agent that is being run. At the same time while running the *agent.py* and one of the testing agents files(e.g. *testingAgent2.py*):
+```
+$ python agent.py
+```
+If it doesn't run, make sure that these files are not inside the system: *move_file*, *end_file*, and any files ending in *.go*. 
 ___
 ## 3 Problems Faced
 In this section, all the bugs that have been encountered during the process of programming the Gomoku AI are listed below as well as how they were fixed.
