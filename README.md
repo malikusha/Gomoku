@@ -160,10 +160,6 @@ def depthLimited():
     minimax(2)
 ```
 
-***
-### 2.4 Offensive and Defensive Behavior
-
-***
 ### 2.5 Program Testing
 #### Test Driven Development
 The *GomokuCollection* class is the class that controls the movement on the board and assigns evaluation scores to it. In order to proceed in using this class, it needed to be heavily tested. Using Test Driven Development (TDD), inside the *testCollection.py* class, the GomokuCollection was thouroughly examined to make sure that the code worked as expected.
@@ -185,8 +181,63 @@ Strenghts: The strength of our AI lies in the fact that the utility score takes 
 
 ***
 ### 2.6 Discussion
-A discussion of why the evaluation function and the heuristic(s) you
-picked are good choices.
+GENERAL IDEA
+
+The utility function attempts to assign points depending on the existence of interests
+structures. The most relevant ones are the existance of N-in-a-row objects.
+ -------   -------    ----X_-    -X-----   -------
+ -------   ----_X-    ---X---    --X----   -------
+ ---X---   -----X-    --X----    ---X---   XXXXXX-
+ -------   -------    -------    ----X--   -------
+1-in-a-row 2-in-a-row 3-in-a-row 4-in-a-row 5-in-a-row
+
+Each of these structures are assigned to be either open, closed, or dead
+-------   -------   -------
+----X--   -------   ----O--
+---X---   --OXX--   -----X-
+--X----   -------   ------X 
+-------   -------   -------
+Open	  Closed	Dead
+
+The first example is an open structure because it can grow into a four in a row by 
+placing a piece on either end of the structure. The second one is a closed structure
+because an oponent piece is blocking one side of the sturcture, but can still grow
+into a four in a row on the other side. The last one is dead because on one side an
+oponent's piece is blocking and on the other side it is facing a boundary.
+
+For each of these existing structures, a weight is given depending on how many pieces 
+in a row (For example, 2 points are awarded for each existing 2 in a row structure, 3
+points are awarded for eaach existing 3 in a row structure, etc;). Then, it is given 
+a multiplier bonus depending on whether it is open, closed, or dead. An open structure
+gets a 2x bonus multiplier, a closed structure gets a 1x multiplier, and a dead structure
+gets 0x multiplier. 
+
+The scores are summed up for each team, and the final score is calculated by subtracting
+the points of the player team by the points of the enemy team. This allows the AI to 
+take into account both offensive and defensive moves.
+
+TERMINAL CONDITION
+The terminal condition is determined when a 5-in-a-row structure is detected. A score of 
+1000000 will be assigned, which will allow the minimax algorithm to identify as the terminal
+condition (and thus, proceed accordingly).
+
+SPECIAL CASES
+The strength of the program lies in the ability to detect positions that are 'forced wins', 
+positions that are not terminal conditions but will put us in a state that will by forced
+lead us to one. For example, an Open-4-in-a-row state, where the opponent is not able to make
+any instant win, is a forced win state. 
+
+DISCUSSION
+
+DEPTH OF 2
+Though we intended to use iterative deepening, it turns out that there were too many problems,
+and we ended up using a minimax algorithm with depth of 2 in order to stay under the tine limit.
+Unfortunately, this limits the strength of our program
+
+FURTHER HEURISTICS FOR CUTTING DOWN
+By identifying the positions that will lead to forced wins, we can use this information to further
+prune the minimax tree, which allows us to search faster.
+ 
 
 ***
 ___
