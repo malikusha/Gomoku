@@ -1,6 +1,7 @@
 import os, math, time, threading, random
 import numpy as np
 import gomokuCollection as boardlib
+import copy
 
 # Constants - Variables that won't change
 TEAM_NAME = "Large_Horse"
@@ -8,7 +9,7 @@ COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 TIME_LIMIT = 10  # Seconds
 BOARD_SIZE = 15
-WIN_SCORE_CUTOFF = 100  # If heuristics weight is higher than this score, than it is a win
+WIN_SCORE_CUTOFF = 100000  # If heuristics weight is higher than this score, than it is a win
 
 # Objects
 white = boardlib.GomokuCollection()
@@ -38,8 +39,7 @@ def init():
     while "end_game" not in os.listdir("."):
         # The player moves only if "Large_Horse.go" file appears in directory
         if TEAM_NAME+".go" in os.listdir("."):
-            t = threading.Timer(90.0, interruptWriteToFile)
-            
+            t = threading.Timer(9.5, interruptWriteToFile)
             time.sleep(0.1)
             # Check move_file to read the current moves
             move_file = open("move_file", 'r')
@@ -47,6 +47,7 @@ def init():
             move_file.close()
             time.sleep(0.1)
             # On first turn, need to denote whether player is playing first in start of game or not
+            t.start()
             if not move:
                 # There are no previous moves, therefore player is playing first in the game
 
@@ -132,7 +133,7 @@ Intermediate function that calls the minimax
 and writes the bestValue set to the move_file
 """
 def makeMove():
-    depthLimited()
+    iterativeDeepening()
     writeToFile()
 """
 Writes the bestMove to the move_file
@@ -146,79 +147,68 @@ def writeToFile():
     f.write( TEAM_NAME + " " + COLUMNS[bestMove[1]] + " " + str(bestMove[0]+1))
     f.close()
     init()
+
+def iterativeDeepening():
+    for num in range(5):
+        minimax(num)
+
 """
-To be implemented: depthLimited search
+To be implemented: Iterative Deepening
 """
-def depthLimited():
-    minimax(3)
+def depthLimited(n):
+    global white
+    global black
+    whiteCopy = copy.deepcopy(white)
+    blackCopy = copy.deecopy(black
+    minimax(n, whiteCopy)
 
 """
 The minimax with alpha beta pruning algorithm
 """
-def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False, timeInit = 0, timeLimit = 10000, dpDict = {}):
+def alphaBeta(depth = 3, alpha = -1<<31, beta = 1<<31, isMaxPlayer = False):
     global white
     global black
     validMoves = getValidMoves()
-    timePerMove = (timeLimit-timeInit)/(len(validMoves)+2)
     levelScore = white.getScore()-black.getScore()
-    hashVal = hash(white)
-    if(hashVal in dpDict):
-        return dpDict[hashVal]
     if(depth == 1 or (abs(levelScore)>WIN_SCORE_CUTOFF)):
-        dpDict[hashVal] = levelScore
         return levelScore
     if(isMaxPlayer):
         maxScore = -1<<31
-        
         for move in validMoves:
             addMoveToBoard(move[0], move[1], True)
-            timeInit = time.time()
-            timeLimit = timeInit + timePerMove
-            maxScore = max(maxScore, alphaBeta(depth-1,alpha, beta, False,timeInit, timeLimit, dpDict))
+            maxScore = max(maxScore, alphaBeta(depth-1,alpha, beta, False))
             alpha = max(alpha, maxScore)
             removeMoveFromBoard(move[0], move[1], True)
             if(maxScore >  WIN_SCORE_CUTOFF):
                 break
             if(beta <= alpha):
                 break;
-        dpDict[hashVal] = maxScore
         return maxScore
     else:
         minScore = 1 <<31
         for move in validMoves:
             addMoveToBoard(move[0], move[1], False)
-            timeInit = time.time()
-            timeLimit = timeInit + timePerMove
-            minScore = min(minScore, alphaBeta(depth-1,alpha, beta, True, timeInit, timeLimit, dpDict))
+            minScore = min(minScore, alphaBeta(depth-1,alpha, beta, True))
             beta = min(beta, minScore)
             removeMoveFromBoard(move[0], move[1], False)
             if(minScore < -WIN_SCORE_CUTOFF):
                 break
             if(beta <= alpha):
                 break;
-        dpDict[hashVal] = minScore
         return minScore
 """
 The initiator of the minimax algorithm
 """
-def minimax(depth = 1):
+def minimax(depth = 1, board):
     global white
     global black
     global bestMove
     global cutOff
     allValidMoves = getValidMoves()
     maxScore = -1<<31
-    timePerMove = (TIME_LIMIT-4)/len(allValidMoves)
-    dpDict = {}
     for move in allValidMoves:
-        #print("Cur move Min: " + COLUMNS[move[1]] + " " + str(move[0]+1))
         addMoveToBoard(move[0], move[1], True)
-        timeInit = time.time()
-        timeLimit = timeInit + timePerMove
-        curScore = alphaBeta(depth,alpha = -1<<31, beta = 1<<31, isMaxPlayer = False, timeInit = timeInit, timeLimit = timeLimit, dpDict = dpDict)
-        if(curScore >=  WIN_SCORE_CUTOFF):
-            bestMove = move
-            return
+        curScore = alphaBeta(depth,alpha = -1<<31, beta = 1<<31, isMaxPlayer = False)
         if(curScore > maxScore):
             maxScore = curScore
             bestMove = move

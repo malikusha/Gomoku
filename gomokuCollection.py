@@ -6,19 +6,25 @@ class GomokuCollection:
     def __init__(self, length = BOARD_SIZE, width = BOARD_SIZE, score2=2, score3=9, score4=15, score5 = 10000000):
         self.board = [[0 for x in range(length)] for y in range(width)] 
         self.orderedMoves = []
+        self.hashableMoves = []
         self.score = [0,0,score2,score3,score4,score5]
         self.ourMove = True
+    def __hash__(self):
+      return hash(tuple(set(self.hashableMoves)))
     def addMove(self, move):
         self.orderedMoves += [move]
         self.board[move[0]][move[1]] = 1
+        self.hashableMoves += [(move,1)]
         self.ourMove = False
         
     def addEnemyMove(self, move):
         self.orderedMoves += [move]
         self.board[move[0]][move[1]] = -1
+        self.hashableMoves += [(move,-1)]
         self.ourMove = True
     def undoMove(self):
         move = self.orderedMoves.pop()
+        self.hashableMoves.pop()
         if(self.board[move[0]][move[1]] == 1):
             self.ourMove = True
         elif(self.board[move[0]][move[1]] == -1):

@@ -3,13 +3,13 @@ from threading import Thread
 import os
 
 
-def callReferee(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):
+def callReferee(teamName1 = 'Large_Horse', teamName2 = 'human'):
     subprocess.call(['python.exe', 'referee.py', teamName1, teamName2])
 def callAgent():
     subprocess.call(['python.exe', 'agent.py'])
 def callAgent2():
-    subprocess.call(['python.exe', 'agent2.py'])
-def removeFiles(teamName1 = 'Large_Horse', teamName2 = 'notKnuckles'):
+    subprocess.call(['python.exe', 'testingAgent6.py'])
+def removeFiles(teamName1 = 'Large_Horse', teamName2 = 'human'):
     listOfFiles = [teamName1 + ".go", teamName2 + ".go", "move_file",
                    "history_file", "end_game"]
     for e in listOfFiles:

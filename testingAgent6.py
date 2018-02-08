@@ -3,7 +3,7 @@ import numpy as np
 import gomokuCollection as boardlib
 
 # Constants - Variables that won't change
-TEAM_NAME = "Large_Horse"
+TEAM_NAME = "minimax_depth_3"
 COLUMNS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 'M', 'N', 'O', 'P', 'Q','R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 TIME_LIMIT = 10  # Seconds
